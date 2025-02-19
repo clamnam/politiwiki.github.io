@@ -30,7 +30,7 @@ const Navbar = () => {
                         </li>
 
                         <li className="m-2 hover:underline underline-offset-8">
-                            <Link to="/projects">Projects</Link>
+                            <Link to='/page'>Pages</Link>
                         </li>
 
                     </ul>

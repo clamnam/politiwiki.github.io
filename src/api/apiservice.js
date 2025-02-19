@@ -1,8 +1,7 @@
 import axios from 'axios';
-import API_BASE_URL from '../.env';
 
 const apiClient = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: process.env.REACT_APP_API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -26,7 +25,6 @@ export const apiService = {
             throw error;
         }
     }
-    // Add mo
-    // re methods (PUT, DELETE, etc.)
 };
+
 export default apiService;
