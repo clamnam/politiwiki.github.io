@@ -4,7 +4,8 @@ import { apiService } from "../api/apiservice.js";
 
 import { useEffect, useState } from 'react';
 import { useApi } from '../hooks/useApi';
-import API_ENDPOINTS from '../.env';
+// import { API_ENDPOINTS, API_BASE_URL } from '../.env';
+
 const Hero = () => {
     const [data, setData] = useState(null);
     const { execute, loading, error } = useApi();
@@ -12,7 +13,8 @@ const Hero = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await execute('get', API_ENDPOINTS.content);
+                const result = await execute('get', `${process.env.REACT_APP_API_BASE_URL}${process.env.REACT_APP_API_CONTENT_ENDPOINT}`);
+                console.log(`${process.env.REACT_APP_API_BASE_URL}`);
                 setData(result);
             } catch (err) {
                 console.error('Failed to fetch data:', err);
@@ -29,7 +31,9 @@ const Hero = () => {
             <>
 
                 <div className="text-white col-span-1 font-medium text-2xl">
-                {{data}}
+                    p
+                {data}
+                p
                 </div>
                 <div className="container">
                     <div className="text-6xl hidden sm:flex justify-center font-light py-16">
@@ -74,28 +78,8 @@ const Hero = () => {
                     <div className="col-span-2 text-white font-medium ">
                         <h1 className="text-4xl mx-4 xs:mx-0">Education and Certifications</h1>
                         <br />
-                        <p className="mb-2 text-lg mx-4 xs:mx-0 ">
-                            I am a third year student of Computing where I gained a
-                            comprehensive knowledge of todays digital landscape. Developing
-                            skills in Programming end to end solutions, Networking and
-                            databases
-                        </p>
-                        <p className="mb-2 text-lg mx-4 xs:mx-0">
-                            Cisco Network Essentials completed with distinction on 06/12/2023
-                        </p>
-                        <p className="mb-2 text-lg mx-4 xs:mx-0">
-                            AWS Cloud Foundations completed with distinction 14/12/2023
-                        </p>
-                        <p className="mb-2 text-lg mx-4 xs:mx-0">
-                            <a
-                                className="underline "
-                                href="https://www.linkedin.com/in/jackmob/"
-                            >
-                                Check out
-                            </a>
-                            &nbsp;
-                            the various Linkedin Learning course certifications
-                        </p>
+                        
+                        
                     </div>
                 </div>
             </div>
