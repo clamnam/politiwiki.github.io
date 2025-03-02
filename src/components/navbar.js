@@ -24,13 +24,13 @@ const Navbar = () => {
 
             <div className={`fixed top-0 ${isNavHidden ? 'hide-nav' : 'show-nav'}`}>
                 <div className="dropdown">
-                    <ul className="flex  text-white r w-52">
+                    <ul className="flex text-white r w-52">
                         <li className="m-2 hover:underline  underline-offset-8 ">
                             <Link to="/">Home</Link>
                         </li>
 
                         <li className="m-2 hover:underline underline-offset-8">
-                            <Link to='/page'>Pages</Link>
+                            <Link to="/page">Pages</Link>
                         </li>
 
                     </ul>

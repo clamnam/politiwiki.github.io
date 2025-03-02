@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const FloatLeft = ({ resource, content }) => {
-    console.log(content);
-
+    console.log("FloatLeft", content);
     // Check if content is a valid non-empty array
     if (!content || !Array.isArray(content) || content.length === 0) {
         return (
