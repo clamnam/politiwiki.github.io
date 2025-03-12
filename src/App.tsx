@@ -1,0 +1,46 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/home.tsx';
+import Page from './components/page/Page.tsx';
+// import Content from './components/content/Content.tsx';
+
+import PageWrapper from './components/page/PageWrapper.tsx';
+import ContentWrapper from './components/content/ContentWrapper.tsx';
+
+import Navbar from './components/navbar.tsx';
+import PageCreate from './components/page/CRUD/PageCreate.tsx';
+// import PageEdit from './components/page/CRUD/PageEdit.tsx';
+
+import ContentCreate from './components/content/CRUD/ContentCreate.tsx';
+// import ContentEdit from './components/content/CRUD/ContentEdit.tsx';
+
+export default function App() {
+  return (
+    <div className=' min-h-screen min-w-screen bg-neutral-500 py-10'>
+      <Router>
+        <div className="">
+          <Navbar />
+          <div className=''>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/page" element={<PageWrapper />}>
+                <Route index element={<Page />} />
+                <Route path=":id" element={<Page />} />
+                <Route path="/page/create" element={<PageCreate />}></Route>
+                {/* <Route path="/page/edit"element={<PageEdit/>}></Route> */}
+              </Route> 
+              <Route path="/content" element={<ContentWrapper />}> 
+               <Route index element={<ContentCreate />}/> 
+               {/* <Route path=":id" element={<ContentEdit/> }/>  */}
+               {/* <Route index element={<Content />} /> */}
+              {/* <Route path=":id" element={<Content />} />  */}
+               <Route path="/content/create"element={<ContentCreate/>}></Route> 
+               {/* <Route path="/content/edit"element={<ContentEdit/>}></Route> */}
+               </Route>
+            </Routes>
+          </div>
+        </div>
+      </Router>
+    </div>
+  );
+};
+

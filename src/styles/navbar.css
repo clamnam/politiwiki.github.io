@@ -1,0 +1,11 @@
+.show-nav {
+	height: var(--nav-height);
+	display: flex;
+	align-items: center;
+	transition: transform 0.2s;
+}
+
+.hide-nav {
+	transform: translateY(-4rem);
+	transition: transform 0.2s;
+}
