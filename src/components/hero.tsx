@@ -1,25 +1,5 @@
-// import React from "react";
-import PageList from "./page/PageList.tsx";
-// import { useEffect, useState } from 'react';
-// import { useApi } from './hooks/useApi.js';
-// import { API_ENDPOINTS, API_BASE_URL } from '../.env';
-
+import { Button } from "@/components/ui/button";
 export default function Hero(){
-    // const [data, setData] = useState(null);
-    // const { execute } = useApi();
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const result = await execute('get', `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}`);
-    //             setData(result);
-    //         } catch (err) {
-    //             console.error(err);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [execute]);
 
 
 
@@ -27,11 +7,15 @@ export default function Hero(){
         <div>
          
 
-            <div className="container-fluid  text-white bg-stone-900 py-4">
-                <h1 className="text-4xl">Pages</h1>
-                <div className=" grid-cols-3 gap-4 container">
-
-                    <PageList  />
+            <div className="container-fluid  text-white ">
+                <div className=" grid h-screen place-items-center">
+                <Button
+                    variant="default"
+                    size="lg"
+                    className="text-white bg-neutral-800 hover:bg-red-500 focus:ring-red-900 shadow-md rounded-lg px-6 py-3 transition-colors"
+                >
+                    Get Started
+                </Button>
                 </div>
 
             </div>

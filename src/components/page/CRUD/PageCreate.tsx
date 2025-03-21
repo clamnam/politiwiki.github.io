@@ -19,6 +19,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import TokenService from "@/api/tokenService";
+import { Card } from "@/components/ui/card"
 
 
 
@@ -35,7 +37,26 @@ const PageCreate = () => {
     },
   })
 async function onSubmit(values: z.infer<typeof formSchema>) {
+  console.log(values);
+  const token = TokenService.tokenRetrieval();
+  axios.post(
+    `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}`,
+    values,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
   axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}`, values)
+  
     .then(function (response) {
       console.log(response);
     });
@@ -45,7 +66,11 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
 
   return (
 <>
+<div className="p-3 text-2xl text-white">Create a Page </div>
+
 {/* {diff} */}
+<div className="  flex w-full items-center  p-6 md:p-10">
+            <Card className="bg-white p-6 w-full max-w-sm">
 <Form {...form}>
   <form onSubmit={form.handleSubmit(onSubmit)}>
 
@@ -64,10 +89,11 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
       )}
     />
 
-    <Button type="submit">Submit</Button>
-  </form>
+<Button className="my-2 hover:border-red-500 hover:grow" variant="outline" type="submit">Submit</Button>
+</form>
 </Form>
-
+</Card>
+</div>
 </>
   );
 };

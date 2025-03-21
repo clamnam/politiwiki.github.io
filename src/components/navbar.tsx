@@ -37,10 +37,10 @@ const Navbar = () => {
                     </ul>
                     <ul className="flex">
                         <li className="m-2 hover:underline underline-offset-8">
-                            <Link to="/page" className="text-white">Login</Link>
+                            <Link to="/login" className="text-white">Login</Link>
                         </li>
                         <li className="m-2 hover:underline underline-offset-8">
-                            <Link to="/page" className="text-white">Register</Link>
+                            <Link to="/register" className="text-white">Register</Link>
                         </li>
                     </ul>
                 </div>

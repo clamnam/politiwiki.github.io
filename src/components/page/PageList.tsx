@@ -39,7 +39,8 @@ export default function PageList(){
     }
 
     return (
-        <div className=" min-w-full text-white bg-stone-900 py-4">
+        <div className="px-2 min-w-full text-white bg-stone-900 py-4">
+            <div className='my-4 text-4xl'>Page List</div>
             <Button className=" max-w-min font-semibold hover:text-white py-2 px-4 border hover:border-gray-500 rounded ">
                         <Link className='flex text-white' to="/page/create">create one?</Link>
                     </Button>

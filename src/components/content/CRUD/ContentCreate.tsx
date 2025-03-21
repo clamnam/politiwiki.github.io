@@ -4,6 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+
 import axios from "axios"
 const formSchema = z.object({
   title: z.string().min(1).max(100),
@@ -26,14 +27,15 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Card } from "@/components/ui/card"
 
 
-
+// import TokenService from "@/api/tokenService";
 
 const ContentCreate = () => {
   // const [data, setData] = useState(null);
   // const [content, setContent] = useState(null);
-
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,6 +49,8 @@ const ContentCreate = () => {
   })
   async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
     console.log(values);
+    // console.log(TokenService.tokenRetrieval());
+
     axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}`, values)
       .then(function (response) {
         console.log(response);
@@ -57,39 +61,46 @@ const ContentCreate = () => {
   return (
     <>
       {/* {diff} */}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="p-3 text-2xl text-white">Create a piece of content </div>
 
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <>
-                <FormItem>
-                  <FormLabel>Content Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. section name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+      <div className="  flex w-full items-center  p-6 ">
+      <Card className="bg-white p-6 w-full max-w-sm">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
 
-              </>
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                
+                  <FormItem className="my-2">
+                    <FormLabel>Content Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. section name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+
+                
+              )}
+            />
+            <FormField control={form.control} name="content_body" render={({ field }) => (
+              <FormItem className="my-2" >
+                <FormLabel>Content Body</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="e.g. relevant information" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          />
-          <FormField control={form.control} name="content_body" render={({ field }) => (
-            <FormItem>
-              <FormLabel>Content Body</FormLabel>
-              <FormControl>
-                <Textarea placeholder="e.g. relevant information" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-          />
-          <Button variant="outline" type="submit">Submit</Button>
-        </form>
-      </Form>
-      
+            />
+            <Button className="my-2" variant="outline" type="submit">Submit</Button>
+          </form>
+        </Form>
+      </Card>
+
+      </div>
+
 
     </>
   );
