@@ -18,11 +18,9 @@ import Register from './components/register.tsx';
 
 export default function App() {
   return (
-    <div className=' min-h-screen min-w-screen bg-neutral-900 py-10'>
+    <div className=' bg-zinc-950  min-h-screen min-w-screen  py-10'>
       <Router>
-        <div className="">
           <Navbar />
-          <div className=''>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/page" element={<PageWrapper />}>
@@ -38,13 +36,12 @@ export default function App() {
                 {/* <Route path=":id" element={<Content />} />  */}
                 <Route path="/content/create" element={<ContentCreate />}></Route>
                 {/* <Route path="/content/edit"element={<ContentEdit/>}></Route> */}
-              </Route>
+              </Route>\
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
 
             </Routes>
-          </div>
-        </div>
+      
       </Router>
     </div>
   );

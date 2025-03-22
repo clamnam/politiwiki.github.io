@@ -57,12 +57,14 @@ export default function Login() {
         }
     }
     return (
-        <Card className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-            <div className="p-6 border-2 border-solid bg-white w-full max-w-sm">
-                <div className="bg-green-400">
+        <div className="flex min-h-screen items-center justify-center text-white p-6">
+            <div className="text-6xl m-4">LOGIN</div>
+            <Card className="p-6 w-full max-w-sm border-white ">
+                
+                <Form {...form}>
+                    <div className="bg-green-400">
                     {status}
                 </div>
-                <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="my-2">
                             <FormField
@@ -92,11 +94,12 @@ export default function Login() {
                             </FormItem>
                         )}
                         />
-                        <Button className="my-2 hover:border-red-500 hover:grow" variant="outline" type="submit">Submit</Button>
+                        <Button className="" variant="submit" type="submit">Log in</Button>
                     </form>
-                </Form>            </div>
+                </Form>            
 
         </Card>
+        </div>
     );
 };
 

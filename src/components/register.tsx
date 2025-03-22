@@ -38,6 +38,7 @@ export default function Register() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            email: "",
             username: "",
             password: ""
         },
@@ -62,8 +63,9 @@ export default function Register() {
         }
     }
     return (
-        <div className="  flex w-full items-center  p-6 ">
-            <Card className="bg-white p-6 w-full max-w-sm">
+        <div className="flex min-h-screen items-center justify-center text-white p-6">
+            <div className="text-6xl m-4">REGISTER</div>
+            <Card className="p-6 w-full max-w-sm border-white ">
                 <div className="bg-green-400">
                     {status}
                 </div>
@@ -71,7 +73,7 @@ export default function Register() {
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="email"
                             render={({ field }) => (
                                 <>
                                     <FormItem className="my-2">
@@ -81,7 +83,6 @@ export default function Register() {
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
-
                                 </>
                             )}
                         />
@@ -98,24 +99,29 @@ export default function Register() {
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
-
                                     </>
                                 )}
                             />
                         </div>
-                        <FormField control={form.control} name="password" render={({ field }) => (
-                            <FormItem className="my-2">
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <Input type="password" placeholder="Password" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem className="my-2">
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" placeholder="Password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
-                        <Button className="my-2 hover:border-red-500 hover:grow" variant="outline" type="submit">Submit</Button>
+                        <Button className="" variant="submit" type="submit">
+                            Submit
+                        </Button>
                     </form>
-                </Form>              </Card>
+                </Form>
+            </Card>
         </div>
 
     );

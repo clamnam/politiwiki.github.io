@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { SquarePenIcon } from "../ui/square-pen";
 import PageList from "./PageList";
 
-
 interface Page {
     id: string;
     title: string;
@@ -75,10 +74,9 @@ const Page = () => {
         );
     } else {
         return (
-            <div className="text-white col-span-1 font-medium text-2xl flex min-w-full">
+            <div className="flex w-full  items-center  p-6 ">
                 <PageList />
-            </div>
-        );
+            </div>);
     }
 };
 

@@ -94,7 +94,7 @@ const ContentCreate = () => {
               </FormItem>
             )}
             />
-            <Button className="my-2" variant="outline" type="submit">Submit</Button>
+            <Button className="my-2" variant="submit" type="submit">Submit</Button>
           </form>
         </Form>
       </Card>
