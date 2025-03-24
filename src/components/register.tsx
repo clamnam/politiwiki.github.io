@@ -1,8 +1,10 @@
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from '@/context/AuthContext';
+
 const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
 
 const formSchema = z.object({
@@ -29,11 +31,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Card } from "./ui/card"
 import { useState } from "react"
-import TokenService from "@/api/tokenService";
-
 
 
 export default function Register() {
+    const navigate = useNavigate();
+    const { login } = useAuth();
     const [status, setStatus] = useState<string | null>(null);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -51,17 +53,21 @@ export default function Register() {
                 .then(function (response) {
                     console.log(response);
                     if (response.status === 200) {
-                        TokenService.tokenSave(response.data.token);
+                        // Use the login function from context instead of directly using TokenService
+                        login(response.data.token);
                         setStatus("Register successful");
+                        // Redirect to pages after successful registration
+                        navigate("/pages");
                     } if (response.status === 401) {
                         setStatus("Register failed");
                     }
-
                 });
         } catch (error) {
             console.error(error)
         }
     }
+    
+    // Rest of your component remains the same
     return (
         <div className="flex min-h-screen items-center justify-center text-white p-6">
             <div className="text-6xl m-4">REGISTER</div>
@@ -123,6 +129,5 @@ export default function Register() {
                 </Form>
             </Card>
         </div>
-
     );
 };

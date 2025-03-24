@@ -39,6 +39,7 @@ const PageCreate = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     const token = TokenService.tokenRetrieval();
+
     axios.post(
       `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}`,
       values,

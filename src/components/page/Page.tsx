@@ -4,6 +4,7 @@ import { useApi } from "../hooks/useApi";
 import { Button } from "@/components/ui/button";
 import { SquarePenIcon } from "../ui/square-pen";
 import PageList from "./PageList";
+import axios from "axios";
 
 interface Page {
     id: string;
@@ -43,9 +44,13 @@ const Page = () => {
                 console.error(err);
             }
             try {
-                const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}bypage/${id}`;
-                const result = await execute("get", apiUrl);
-                setContent(result);
+                const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/bypage/${id}`;
+                // const result = await execute("get", apiUrl);
+                axios.get(apiUrl).then((response) => {
+                setContent(response.data);
+                // console.log(response);
+                });
+
             } catch (err) {
                 console.error(err);
             }
@@ -56,13 +61,14 @@ const Page = () => {
 
     if (data?.title) {
         return (
-            <div className="text-white col-span-1 font-medium text-2xl items-center">
-                <div className="bg-neutral-900">
+            <div className="flex   items-center  p-6 ">
+            <div className="text-white w-full col-span-1 font-medium text-2xl items-center">
+                <div className="">
                     <div className="justify-center p-4">
                         <div className="text-white col-span-1 font-medium text-4xl justify-center">
                             <div>{data.title}</div>
                             <Button className="max-w-min font-semibold hover:text-white py-2 px-4 border hover:border-gray-500 rounded">
-                                <Link to="/content/create">create content?</Link>
+                                <Link to="/content/create" state={{page: id}}>create content?</Link>
                             </Button>
                         </div>
                         <div className="text-white col-span-1 font-medium flex">
@@ -70,6 +76,7 @@ const Page = () => {
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         );
     } else {

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useApi } from '../hooks/useApi';
 import { Button } from "@/components/ui/button"
+import { Card } from '../ui/card';
 interface Page {
     id: string;
     title: string;
@@ -53,17 +54,19 @@ export default function PageList() {
         <div className="flex w-full items-center  p-6 ">
 
 
-        <div className="px-2 min-w-full text-white bg-stone-900 py-4">
+        <div className="px-2 min-w-full text-white  py-4">
             <div className='my-4 text-4xl'>Page List</div>
             <Button variant="destructive" className=" ">
                 <Link className='flex text-white'  to="/page/create">create one?</Link>
             </Button>
+            <Card>
             {data.map((item, index) => (
 
                 <div key={index} className="">
                     <Link to={`/page/${item?.id}`}>{item?.title}</Link>
                 </div>
             ))}
+            </Card>
         </div>
         </div>
 

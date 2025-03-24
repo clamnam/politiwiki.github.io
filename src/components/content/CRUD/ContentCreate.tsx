@@ -4,6 +4,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import axios from "axios"
 const formSchema = z.object({
@@ -12,7 +13,6 @@ const formSchema = z.object({
   content_type: z.number().int(),
   order_id: z.number().int(),
   page_id: z.number().int(),
-  status: z.number().int(),
 
 
 })
@@ -28,14 +28,28 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
+import TokenService from "@/api/tokenService"
 
 
 // import TokenService from "@/api/tokenService";
 
 const ContentCreate = () => {
-  // const [data, setData] = useState(null);
-  // const [content, setContent] = useState(null);
-  
+  const navigate = useNavigate(); // Initialize the navigate function
+
+  const location = useLocation();
+  const data = location.state;
+  if (data?.page === undefined || isNaN(Number(data.page))) {
+    navigate('/pages');
+  }
+
+  // Add debugging
+  console.log("data.page type:", typeof data.page);
+  console.log("data.page value:", data.page);
+
+  // More explicit conversion
+  const pageIdNumber = parseInt(data.page, 10);
+  console.log("Converted page ID:", pageIdNumber, "type:", typeof pageIdNumber);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,36 +57,52 @@ const ContentCreate = () => {
       content_type: 1,
       content_body: "",
       order_id: 2,
-      page_id: 2,
-      status: 1
+      page_id: pageIdNumber, // Use the explicitly converted number
     },
   })
   async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
-    console.log(values);
-    // console.log(TokenService.tokenRetrieval());
-
-    axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}`, values)
-      .then(function (response) {
-        console.log(response);
-      });
+    console.log("Form submission started");
+    console.log("Values:", values);
+    
+    const token = TokenService.tokenRetrieval();
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}`, 
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response:", response);
+      // Show success message or redirect user
+      navigate(`/page/${data.page}`); // Redirect to the page view after successful creation
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // Handle error - show error message to user
+    }
   }
 
 
   return (
     <>
-      {/* {diff} */}
       <div className="p-3 text-2xl text-white">Create a piece of content </div>
 
-      <div className="  flex w-full items-center  p-6 ">
-      <Card className="bg-white p-6 w-full max-w-sm">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                
+      <div className="flex w-full items-center p-6">
+        <Card className="bg-white p-6 w-full max-w-sm">
+          <Form {...form}>
+            <form 
+              onSubmit={form.handleSubmit(
+                onSubmit, 
+                (errors) => console.error("Form validation errors:", errors)
+              )} 
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
                   <FormItem className="my-2">
                     <FormLabel>Content Title</FormLabel>
                     <FormControl>
@@ -80,32 +110,38 @@ const ContentCreate = () => {
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-
-                
-              )}
-            />
-            <FormField control={form.control} name="content_body" render={({ field }) => (
-              <FormItem className="my-2" >
-                <FormLabel>Content Body</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="e.g. relevant information" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-            />
-            <Button className="my-2" variant="submit" type="submit">Submit</Button>
-          </form>
-        </Form>
-      </Card>
-
+                )}
+              />
+              <FormField 
+                control={form.control} 
+                name="content_body" 
+                render={({ field }) => (
+                  <FormItem className="my-2">
+                    <FormLabel>Content Body</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="e.g. relevant information" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button 
+                className="my-2" 
+                variant="submit" 
+                type="submit"
+                onClick={() => console.log("Button clicked")}
+              >
+                Submit
+              </Button>
+            </form>
+          </Form>
+        </Card>
       </div>
-
-
     </>
   );
 };
 
 export default ContentCreate;
+
 
 

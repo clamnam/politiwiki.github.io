@@ -1,9 +1,9 @@
-
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import axios from "axios"
+import { useAuth } from '@/context/AuthContext';
+
 const formSchema = z.object({
     username: z.string().min(1)
         .max(30, { message: "Username must be less than 30 characters." }),
@@ -25,10 +25,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Card } from "./ui/card"
 import { useState } from "react"
-import TokenService from "@/api/tokenService"
+// import TokenService from "@/api/tokenService"
+import {  useNavigate } from "react-router-dom"
 
 
 export default function Login() {
+    const navigate = useNavigate(); // Initialize the navigate function
+    const { login } = useAuth();
     const [status, setStatus] = useState<string | null>(null);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -45,8 +48,9 @@ export default function Login() {
             .then(function (response) {
                 console.log(response);
                 if (response.status === 200) {
-                    TokenService.tokenSave(response.data.token);
+                    login(response.data.token); // Use the context function instead
                     setStatus("Login successful");
+                    navigate("/pages");
                 } if (response.status === 401) {
                     setStatus("Login failed");
                 }
