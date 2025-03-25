@@ -29,23 +29,19 @@ export default function PageList() {
     if (!data || !Array.isArray(data) || data.length === 0) {
         return (
             <>
-            <div className="  ">
-                        theres no pages?
-                    </div>
-            <div className="  flex w-full items-center  p-6 ">
-
-
-                    
-
+                <div className="  ">
+                    theres no pages?
+                </div>
+                <div className="  flex w-full items-center  p-6 ">
                     <Button
-                    variant="default"
-                    size="lg"
-                    className="text-white  hover:bg-red-500 focus:ring-red-900 shadow-md rounded-lg px-6 py-3 transition-colors"
-                >
+                        variant="default"
+                        size="lg"
+                        className="text-white  hover:bg-red-500 focus:ring-red-900 shadow-md rounded-lg px-6 py-3 transition-colors"
+                    >
                         <Link to="/page/create">create one?</Link>
-                        </Button>
+                    </Button>
 
-            </div>
+                </div>
             </>
         );
     }
@@ -54,20 +50,20 @@ export default function PageList() {
         <div className="flex w-full items-center  p-6 ">
 
 
-        <div className="px-2 min-w-full text-white  py-4">
-            <div className='my-4 text-4xl'>Page List</div>
-            <Button variant="destructive" className=" ">
-                <Link className='flex text-white'  to="/page/create">create one?</Link>
-            </Button>
-            <Card>
-            {data.map((item, index) => (
+            <div className="px-2 min-w-full text-white  py-4">
+                <div className='my-4 text-4xl'>Page List</div>
+                <Button variant="primary" className=" ">
+                    <Link className='flex ' to="/page/create">create one?</Link>
+                </Button>
+                <Card>
+                    {data.map((item, index) => (
 
-                <div key={index} className="">
-                    <Link to={`/page/${item?.id}`}>{item?.title}</Link>
-                </div>
-            ))}
-            </Card>
-        </div>
+                        <div key={index} className="">
+                            <Link className='p-4' to={`/page/${item?.id}`}>{item?.title}</Link>
+                        </div>
+                    ))}
+                </Card>
+            </div>
         </div>
 
 
