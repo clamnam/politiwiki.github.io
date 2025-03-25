@@ -31,7 +31,6 @@ export default function PageList() {
                 const pageTypes: PageTypeData[] = [];
                 console.log("All pages:", allPages);
                 // Create categories based on page types
-                console.log("Type name:", allPages[1].type);
 
                 for (let i = 0; i < pageTypeCount; i++) {
                     const typeName = import.meta.env[`VITE_API_PAGE_TYPE_${i}`];
