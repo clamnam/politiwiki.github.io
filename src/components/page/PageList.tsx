@@ -25,11 +25,9 @@ export default function PageList() {
             try {
                 // Get page type count from env
                 const pageTypeCount = parseInt(import.meta.env.VITE_API_PAGE_TYPE_COUNT || "0", 10);
-                console.log("Page type count:", pageTypeCount);
                 // Fetch all pages
                 const allPages = await execute('get', `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}`);
                 const pageTypes: PageTypeData[] = [];
-                console.log("All pages:", allPages);
                 // Create categories based on page types
 
                 for (let i = 0; i < pageTypeCount; i++) {
@@ -41,7 +39,6 @@ export default function PageList() {
                             name: typeName,
                             pages: pagesOfType || []
                         });
-                        console.log("Pages of type", typeName, ":", pagesOfType);
                     }
                 }
                 

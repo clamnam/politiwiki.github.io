@@ -87,10 +87,9 @@ const ContentCreate = () => {
 
   return (
     <>
-      <div className="p-3 text-2xl text-white">Create a piece of content </div>
-
-      <div className="flex w-full items-center p-6">
-        <Card className="bg-white p-6 w-full max-w-sm">
+      <div className=" p-6 md:p-10">
+        <Card className="p-6 w-full max-w-sm text-white ">
+        <div className="text-2xl ">Create Content </div>
           <Form {...form}>
             <form 
               onSubmit={form.handleSubmit(

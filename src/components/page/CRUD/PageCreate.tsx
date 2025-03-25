@@ -22,7 +22,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -100,23 +99,23 @@ const PageCreate = () => {
 
   return (
     <>
-      <div className="px-3 text-2xl text-white">Create a Page </div>
 
       {/* {diff} */}
-      <div className=" flex w-full items-center  p-6 md:p-10">
-        <Card className=" p-6 w-full max-w-sm ">
+      <div className="p-6 md:p-10">
+        <Card className="p-6 w-full max-w-sm ">
+        <div className="text-2xl text-white">Create a Page </div>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem >
                     <FormLabel>Page Title</FormLabel>
                     <FormControl>
                       <Input placeholder="e.g. party name" {...field} />
                     </FormControl>
-                    <FormDescription>This is the pages name</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -125,12 +124,12 @@ const PageCreate = () => {
                 control={form.control}
                 name="page_type"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mt-8">
                     <FormLabel>Page Type</FormLabel>
                     <Select onValueChange={(value: string) => field.onChange(parseInt(value, 10))} defaultValue={String(field.value)}>
                       <FormControl>
                         <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select a fruit" />
+                          <SelectValue placeholder="Select a party" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-white">
@@ -143,7 +142,7 @@ const PageCreate = () => {
                 )}
               />
 
-              <Button variant="submit" type="submit">Submit</Button>
+              <Button className="mt-8" variant="submit" type="submit">Submit</Button>
             </form>
           </Form>
         </Card>

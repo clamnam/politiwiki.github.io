@@ -10,6 +10,7 @@ interface Page {
     id: string;
     title: string;
     content_body: string;
+    queue:string;
 }
 
 const Page = () => {
@@ -27,8 +28,10 @@ const Page = () => {
                         <Link to={`/content/${item.id}`} className="p-0">
                             <SquarePenIcon className="text-white" />
                         </Link>
+                    
                     </div>
                     <div className="text-sm">{item.content_body}</div>
+                    
                 </div>
             ))}
         </div>
