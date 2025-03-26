@@ -20,7 +20,7 @@ import { AuthProvider } from './context/AuthContext';
 export default function App() {
   return (
     <AuthProvider>
-      <div className='bg-zinc-950  min-h-screen min-w-screen  py-10'>
+      <div className='  min-h-screen min-w-screen  py-10 bg-zinc-950'>
         <Router>
           <Navbar />
           <div className='flex justify-center'>

@@ -103,7 +103,7 @@ const PageCreate = () => {
       {/* {diff} */}
       <div className="p-6 md:p-10">
         <Card className="p-6 w-full max-w-sm ">
-        <div className="text-2xl text-white">Create a Page </div>
+        <div className="text-2xl text-white font-serif">Create a Page </div>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>

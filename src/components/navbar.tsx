@@ -51,7 +51,7 @@ const Navbar = () => {
     
     return (
         <div className={``}>
-            <div className={`bg-zinc-900 min-w-full fixed text-lg top-0 ${isNavHidden ? 'hide-nav' : 'show-nav'}`}>
+            <div className={`sm:bg-transparent bg-zinc-900 min-w-full fixed text-lg top-0 ${isNavHidden ? 'hide-nav' : 'show-nav'}`}>
                 <div className="dropdown flex justify-between items-center w-full">
                     <ul className="flex">
                         <li className="m-2 hover:underline text-white underline-offset-8">

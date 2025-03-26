@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useApi } from '../hooks/useApi';
 import { Button } from "@/components/ui/button"
 import { Card } from '../ui/card';
+import { useAuth } from '@/context/AuthContext';
 
 interface Page {
     id: string;
@@ -19,6 +20,7 @@ export default function PageList() {
     const [pageTypeData, setPageTypeData] = useState<PageTypeData[]>([]);
     const [loading, setLoading] = useState(true);
     const { execute } = useApi();
+    const { isLoggedIn } = useAuth();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -79,19 +81,21 @@ export default function PageList() {
     return (
         <div className=" text-white flex w-full items-center p-6">
             <div className="px-2 min-w-full text-white py-4">
-                <div className='my-4 text-4xl'>Page List</div>
-                <Button variant="primary" className="">
+                <div className='my-4 text-4xl font-serif'>Page List</div>
+
+
+                {isLoggedIn?<Button variant="primary" className="">
                     <Link className='flex' to="/page/create">create one?</Link>
-                </Button>
+                </Button>:null}
                 
                 {pageTypeData.map((typeData, typeIndex) => (
                     <div key={typeIndex} className="mt-4">
-                        <h2 className="text-2xl mb-2">{typeData.name}</h2>
+                        <h2 className="text-2xl mb-2 font-serif">{typeData.name}</h2>
                         <Card>
                             {typeData.pages.length > 0 ? (
                                 typeData.pages.map((item, index) => (
                                     <div key={index} className="">
-                                        <Link className='p-4' to={`/page/${item?.id}`}>{item?.title}</Link>
+                                        <Link className='p-4 text-xl font-serif' to={`/page/${item?.id}`}>{item?.title}</Link>
                                     </div>
                                 ))
                             ) : (
