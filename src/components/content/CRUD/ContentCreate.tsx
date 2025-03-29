@@ -60,10 +60,7 @@ const ContentCreate = () => {
       page_id: pageIdNumber, // Use the explicitly converted number
     },
   })
-  async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
-    console.log("Form submission started");
-    console.log("Values:", values);
-    
+  async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {    
     const token = TokenService.tokenRetrieval();
     try {
       const response = await axios.post(
@@ -89,7 +86,7 @@ const ContentCreate = () => {
     <>
       <div className=" p-6 md:p-10">
         <Card className="p-6 w-full max-w-sm text-white ">
-        <div className="text-2xl ">Create Content </div>
+        <div className="text-2xl font-serif">Create Content </div>
           <Form {...form}>
             <form 
               onSubmit={form.handleSubmit(

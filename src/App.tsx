@@ -5,6 +5,10 @@ import Login from './components/login.tsx';
 import Page from './components/page/Page.tsx';
 // import Content from './components/content/Content.tsx';
 
+import ContentConfirmQueue from './components/content/CRUD/ContentConfirmQueue.tsx';
+// import ContentConfirmScreen from './components/content/CRUD/ContentConfirmScreen.tsx';
+
+
 import PageWrapper from './components/page/PageWrapper.tsx';
 import ContentWrapper from './components/content/ContentWrapper.tsx';
 
@@ -19,14 +23,17 @@ import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
   return (
+
     <AuthProvider>
-      <div className='  min-h-screen min-w-screen  py-10 bg-zinc-950'>
         <Router>
           <Navbar />
-          <div className='flex justify-center'>
+          <div className=' flex  justify-center min-h-screen min-w-screen  py-10 bg-zinc-950'>
+
+          <div className=' md:w-3/4 w-7/8 top-0 show-navflex  '>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/pages" element={<Page />} />
+            <Route path="/page/:id/queue/" element={<ContentConfirmQueue />} />
 
             <Route path="/page" element={<PageWrapper />}>
               <Route path=":id" element={<Page />} />
@@ -35,19 +42,24 @@ export default function App() {
             </Route>
             <Route path="/content" element={<ContentWrapper />}>
               <Route index element={<ContentCreate />} />
+
               {/* <Route path=":id" element={<ContentEdit/> }/>  */}
               {/* <Route index element={<Content />} /> */}
               {/* <Route path=":id" element={<Content />} />  */}
               <Route path="/content/create" element={<ContentCreate />}></Route>
+              {/* <Route path="/content/confirm" element={<ContentConfirmScreen/>}></Route> */}
+
               {/* <Route path="/content/edit"element={<ContentEdit/>}></Route> */}
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
           </div>
+
+          </div>
         </Router>
-      </div>
     </AuthProvider>
+
   );
 };
 

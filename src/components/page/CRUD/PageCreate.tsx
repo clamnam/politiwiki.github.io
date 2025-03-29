@@ -13,7 +13,6 @@ for (let i = 0; i < page_type_count; i++) {
   const type = import.meta.env[`VITE_API_PAGE_TYPE_${i}`];
   page_types.set(i, type);
 }
-console.log(page_types);
 const formSchema = z.object({
   title: z.string().min(1).max(100),
   page_type: z.number().min(0).max(page_type_count + 1),
@@ -101,7 +100,7 @@ const PageCreate = () => {
     <>
 
       {/* {diff} */}
-      <div className="p-6 md:p-10">
+      <div className="p-6 md:p-10 text-white">
         <Card className="p-6 w-full max-w-sm ">
         <div className="text-2xl text-white font-serif">Create a Page </div>
 

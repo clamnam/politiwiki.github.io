@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useApi } from '../hooks/useApi';
 import { Button } from "@/components/ui/button"
-import { Card } from '../ui/card';
 import { useAuth } from '@/context/AuthContext';
 
 interface Page {
@@ -43,7 +42,7 @@ export default function PageList() {
                         });
                     }
                 }
-                
+
                 setPageTypeData(pageTypes);
             } catch (err) {
                 console.error(err);
@@ -79,32 +78,34 @@ export default function PageList() {
     }
 
     return (
-        <div className=" text-white flex w-full items-center p-6">
+        <>
             <div className="px-2 min-w-full text-white py-4">
-                <div className='my-4 text-4xl font-serif'>Page List</div>
-
-
-                {isLoggedIn?<Button variant="primary" className="">
-                    <Link className='flex' to="/page/create">create one?</Link>
-                </Button>:null}
-                
+                <div className='flex space'>
+                    <div className='my-1 text-4xl font-serif'>Page List</div>
+                    {isLoggedIn ? <Button variant="primary" className="">
+                        <Link className='flex' to="/page/create">create one?</Link>
+                    </Button> : null}
+                </div>
                 {pageTypeData.map((typeData, typeIndex) => (
-                    <div key={typeIndex} className="mt-4">
+                    <div key={typeIndex} className="my-10">
                         <h2 className="text-2xl mb-2 font-serif">{typeData.name}</h2>
-                        <Card>
-                            {typeData.pages.length > 0 ? (
-                                typeData.pages.map((item, index) => (
-                                    <div key={index} className="">
-                                        <Link className='p-4 text-xl font-serif' to={`/page/${item?.id}`}>{item?.title}</Link>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="p-4">No pages of type {typeData.name}</div>
-                            )}
-                        </Card>
+                        {typeData.pages.length > 0 ? (
+                            typeData.pages.map((item, index) => (
+                                <div key={item.id || index}>
+                                    <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+
+                                    <Button variant="destructive" className="hover:bg-red-600">
+                                        <Link className=' 0 p-4 text-xl font-serif' to={`/page/${item?.id}`}>{item?.title}</Link>
+                                    </Button>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="p-4">No pages of type {typeData.name}</div>
+                        )}
                     </div>
+
                 ))}
             </div>
-        </div>
+        </>
     );
 }

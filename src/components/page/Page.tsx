@@ -13,36 +13,53 @@ import {
     AlertDescription,
     AlertTitle,
 } from "@/components/ui/alert"
+import ContentConfirmButton from "../content/CRUD/ContentQueueButton";
+// import ContentConfirmButton from "../content/CRUD/ContentConfirmButton";
 
 interface Page {
     id: string;
     title: string;
     content_body: string;
     queue: string;
+
 }
 
 const Page = () => {
     const [data, setData] = useState<Page | null>(null);
-    const [content, setContent] = useState(null);
+    const [content, setContent] = useState<Page[] | null>(null);
+    const [pending, setPending] = useState(0);
     const { execute } = useApi();
     const { id } = useParams();
     const { isLoggedIn } = useAuth();
+
+
+    useEffect(() => {
+        if (content) {
+            const pendingCount: number = content.filter((item: Page) => item.queue).length;
+            setPending(pendingCount);
+            console.log(pending);
+        }
+    }, [content, pending]);
+
     const rendercontent = (content: Page[]) => (
         <div>
-            {content.map((item, index) => (
-                <div key={index} className="">
-                    <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
-            <div className="flex">
-                        <div className="text-2xl py-2 font-serif">{item.title}</div>
-                        <Link to={`/content/${item.id}`} className="p-0">
-                            <SquarePenIcon className="text-white" />
-                        </Link>
+            {content.map((item, index) => {
+                return (
+                    <div key={index} className="break-words">
+                        <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+                        <div className="flex">
+                            <div className="text-2xl py-2 font-serif">{item.title}</div>
+
+                            <Link to={`/content/${item.id}`} className="p-0">
+                                <SquarePenIcon className="text-white" />
+                            </Link>
+
+                        </div>
+                        <div className="text-base ">{item.content_body}</div>
 
                     </div>
-                    <div className="text-base ">{item.content_body}</div>
-
-                </div>
-            ))}
+                );
+            })}
         </div>
     );
 
@@ -73,37 +90,38 @@ const Page = () => {
 
     if (data?.title) {
         return (
-            <div className="flex   items-center  p-6 ">
-                <div className="text-white w-full col-span-1 font-medium text-2xl items-center">
-                    <div className="">
-                        <div className="justify-center p-4">
-                            <div className="text-white col-span-1 my-8  font-medium text-4xl justify-center">
-                                <div className="font-serif py-2">{data.title}</div>
-                                {isLoggedIn ? <Button variant="primary" className="">
-                                    <Link to="/content/create" state={{ page: id }}>Create Content for this page?</Link>
-                                </Button> : null}
-                                
-                            </div>
-                                {content && rendercontent(content)}
-                                {!content && <Alert variant="destructive">
-                                    <AlertCircle className="h-4 w-4 " />
-                                    <AlertTitle>No Content Found</AlertTitle>
-                                    <AlertDescription>
-                                    {isLoggedIn ? <Button variant="primary" className="">
-                                    <Link to="/content/create" state={{ page: id }}>Create Content for this page?</Link>
-                                </Button> : null}
-                                        
-                                    </AlertDescription>
-                                </Alert>}
+            <div className="">
 
-                        </div>
+                <div className=" text-white  font-medium ">
+                {pending ?
+                    <ContentConfirmButton id={Number(id)} value={pending} /> : null
+                }
+                    <div className=" flex justify-between my-8 font-medium text-4xl ">
+
+                        <div className="font-serif py-2">{data.title}</div>
+                        {isLoggedIn && content ? <Button variant="primary" className="">
+                            <Link to="/content/create" state={{ page: id }}>Create Content for this page?</Link>
+                        </Button> : null}
                     </div>
+                    
+                    {content && rendercontent(content)}
+
+                    {!content && <Alert variant="destructive">
+                        <AlertCircle className="h-4 w-4 " />
+                        <AlertTitle>No Content Found</AlertTitle>
+                        <AlertDescription>
+                            {isLoggedIn ? <Button variant="primary" className="">
+                                <Link to="/content/create" state={{ page: id }}>Create Content for this page?</Link>
+                            </Button> : null}
+                        </AlertDescription>
+                    </Alert>}
+
                 </div>
             </div>
         );
     } else {
         return (
-            <div className="flex w-full  items-center  p-6 ">
+            <div className=" ">
                 <PageList />
             </div>);
     }
