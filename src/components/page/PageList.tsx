@@ -81,8 +81,9 @@ export default function PageList() {
     return (
         <>
             <div className="px-2 min-w-full text-white py-4">
-                <div className='flex space'>
-                    <div className='my-1 text-4xl font-serif'>Page List</div>
+                <div className='flex justify-between'>
+                <div className='my-1 text-4xl font-serif'>Page List</div>
+
                     {isLoggedIn ? <Button variant="primary" className="">
                         <Link className='flex' to="/page/create">create one?</Link>
                     </Button> : null}

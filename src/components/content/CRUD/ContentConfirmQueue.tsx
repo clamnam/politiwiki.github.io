@@ -1,10 +1,10 @@
 import Page from "@/components/page/Page";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CheckCheckIcon } from "@/components/ui/check-check";
 import { XIcon } from "@/components/ui/x";
-
+import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued';
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -37,7 +37,7 @@ const ContentConfirmQueue = () => {
     const { id } = useParams();
     const [data, setData] = useState<Page | null>(null);
     const [content, setContent] = useState<Content[]>();
-
+    const navigate = useNavigate();
     // const [pending, setPending] = useState(0);
     // const { execute } = useApi();
     // const { isLoggedIn } = useAuth();
@@ -51,7 +51,6 @@ const ContentConfirmQueue = () => {
 
     async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
         const token = TokenService.tokenRetrieval();
-        console.log("Form values:", values);
         const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/${id}`;
         try {
             const response = await axios.patch(
@@ -65,6 +64,7 @@ const ContentConfirmQueue = () => {
             );
 
             console.log("Response:", response);
+            navigate(`/page/${id}`);
             // Show success message or redirect user
         } catch (error) {
             console.error("Error submitting form:", error);
@@ -77,7 +77,6 @@ const ContentConfirmQueue = () => {
         try {
             const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}${id}`;
             axios.get(apiUrl).then((response) => {
-                setContent(response.data);
                 setData(response.data);
 
             });
@@ -95,12 +94,12 @@ const ContentConfirmQueue = () => {
         }
 
     }, [id]);
-    const renderContentQueue = ()=> {
-        console.log(content);
+
+    const renderContentQueue = () => {
+        console.log("content", content);
 
         return (
             <div className="text-white">
-
                 {content && Array.isArray(content) &&
                     content
                         .filter(item => typeof item.queue === "string")
@@ -118,12 +117,12 @@ const ContentConfirmQueue = () => {
                             if (!parsedQueue) {
                                 return null;
                             }
-                            console.log(parsedQueue);
+   
                             return (
                                 <div className="text-white" key={index}>
                                     <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
-                                    <div>{parsedQueue?.title}</div>
                                     <div className="m-4">
+                                        {item?.id}
                                         {item?.status === "Pending" ? (
                                             <div className="text-red-500">New Content</div>
                                         ) : (
@@ -131,7 +130,7 @@ const ContentConfirmQueue = () => {
                                         )}
                                         <div className="text-2xl font-serif">{parsedQueue?.title}</div>
                                         <div className="text-lg">{parsedQueue?.content_body}</div>
-                                        <Dialog>
+                                        <Dialog  >
                                             <DialogTrigger asChild>
                                                 <Button>
                                                     <CheckCheckIcon
@@ -140,38 +139,47 @@ const ContentConfirmQueue = () => {
                                                     />
                                                 </Button>
                                             </DialogTrigger>
-                                            <DialogContent className="sm:max-w-[425px] bg-neutral-800 text-white">
-                                                <DialogHeader>
-                                                    <DialogTitle>APPROVE CONTENT?</DialogTitle>
-                                                    <DialogDescription>
-                                                        Are you sure you want to approve this section?
-                                                    </DialogDescription>
-                                                </DialogHeader>
-                                                <div className="text-2xl gap-4 py-4">
-                                                    <div className="font-serif">Section Title :</div>
-                                                    <div className="text-white items-center">
-                                                        {parsedQueue?.title}
+                                            <DialogContent className=" min-w-10/12 sm:max-w-[425px] bg-neutral-800 text-white">
+                                                <div >
+
+                                                    <DialogHeader>
+                                                        <DialogTitle>APPROVE CONTENT?</DialogTitle>
+                                                        <DialogDescription>
+                                                            Are you sure you want to approve this section?
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    <div className="text-2xl gap-4 py-4">
+                                                        <div className="font-serif">Section Title :</div>
+                                                        <div className="overflow-scroll text-white text-xs items-center">
+                                                            {parsedQueue?.title}
+                                                            
+
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <hr className="h-px my-4 bg-gray-200 border-0" />
-                                                <div className="text-lg gap-4 py-4">
-                                                    <div className="font-serif">Section body :</div>
-                                                    <div className="items-center">
-                                                        {parsedQueue?.content_body}
+                                                    <hr className="h-px my-4 bg-gray-200 border-0" />
+                                                    <div className="text-lg gap-4 py-4">
+                                                        <div className="font-serif">Section body :</div>
+                                                        <div className="items-center">
+                                                            <ReactDiffViewer oldValue={content[index].content_body} newValue={parsedQueue?.content_body} compareMethod={DiffMethod.WORDS_WITH_SPACE} />
+                                                        </div>
                                                     </div>
+                                                    <DialogFooter>
+                                                        <Button
+                                                            variant="submit"
+                                                            onClick={() => {
+                                                                form.setValue('queue_index', index);
+                                                                form.handleSubmit(onSubmit)();
+                                                            }}
+                                                            type="submit"
+                                                        >
+                                                            {item?.status === "Pending" ? (
+                                                                <div className="text-green-500">approve new section</div>
+                                                            ) : (
+                                                                <div className="text-green-500">approve change</div>
+                                                            )}                                                    </Button>
+                                                    </DialogFooter>
                                                 </div>
-                                                <DialogFooter>
-                                                    <Button
-                                                        variant="submit"
-                                                        onClick={() => {
-                                                            form.setValue('queue_index', index);
-                                                            form.handleSubmit(onSubmit)();
-                                                        }}
-                                                        type="submit"
-                                                    >
-                                                        Confirm Changes
-                                                    </Button>
-                                                </DialogFooter>
+
                                             </DialogContent>
                                         </Dialog>
                                         <Button className="m-0 p-0">
@@ -197,7 +205,7 @@ const ContentConfirmQueue = () => {
                     {data?.title}
                 </div>
                 {renderContentQueue()}
-                
+
             </div>
             {
             }

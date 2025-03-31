@@ -41,9 +41,9 @@ const Page = () => {
         //     }
         // }
         if (content) {
-            const pendingCount: number = content.filter((item: Page) => item.queue!=null).length;
+            console.log(content);
+            const pendingCount: number = content.filter((item: Page) => item.queue!="[]").length;
             setPending(pendingCount);
-            console.log(pending);
         }
     }, [content, pending]);
 
