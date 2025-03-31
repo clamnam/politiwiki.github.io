@@ -160,7 +160,9 @@ const ContentConfirmQueue = () => {
                                                     <div className="text-lg gap-4 py-4">
                                                         <div className="font-serif">Section body :</div>
                                                         <div className="items-center">
-                                                            <ReactDiffViewer oldValue={content[index].content_body} newValue={parsedQueue?.content_body} compareMethod={DiffMethod.WORDS_WITH_SPACE} />
+                                                            {item?.status === "Pending" ? (
+                                                        parsedQueue?.content_body
+                                                            ):(<ReactDiffViewer oldValue={content[index].content_body} newValue={parsedQueue?.content_body} compareMethod={DiffMethod.WORDS_WITH_SPACE} />)}
                                                         </div>
                                                     </div>
                                                     <DialogFooter>
