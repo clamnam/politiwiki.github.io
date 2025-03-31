@@ -18,7 +18,7 @@ import PageCreate from './components/page/CRUD/PageCreate.tsx';
 
 import ContentCreate from './components/content/CRUD/ContentCreate.tsx';
 import Register from './components/register.tsx';
-// import ContentEdit from './components/content/CRUD/ContentEdit.tsx';
+import ContentEdit from './components/content/CRUD/ContentEdit.tsx';
 import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
@@ -47,6 +47,8 @@ export default function App() {
               {/* <Route index element={<Content />} /> */}
               {/* <Route path=":id" element={<Content />} />  */}
               <Route path="/content/create" element={<ContentCreate />}></Route>
+              <Route path="/content/edit/:id" element={<ContentEdit />}></Route>
+
               {/* <Route path="/content/confirm" element={<ContentConfirmScreen/>}></Route> */}
 
               {/* <Route path="/content/edit"element={<ContentEdit/>}></Route> */}

@@ -17,6 +17,7 @@ import ContentConfirmButton from "../content/CRUD/ContentQueueButton";
 // import ContentConfirmButton from "../content/CRUD/ContentConfirmButton";
 
 interface Page {
+    status: string;
     id: string;
     title: string;
     content_body: string;
@@ -34,23 +35,31 @@ const Page = () => {
 
 
     useEffect(() => {
+        // if (content) {
+        //     for (let x = 0; x < content.length; x++) {
+        //         console.log(content,x,content[x].queue);
+        //     }
+        // }
         if (content) {
-            const pendingCount: number = content.filter((item: Page) => item.queue).length;
+            const pendingCount: number = content.filter((item: Page) => item.queue!=null).length;
             setPending(pendingCount);
             console.log(pending);
         }
     }, [content, pending]);
 
     const rendercontent = (content: Page[]) => (
+        console.log(content),
         <div>
-            {content.map((item, index) => {
+            {content.filter(item => item.status != "Pending")
+            .map((item, index) => {
+                // console.log(item);
                 return (
                     <div key={index} className="break-words">
                         <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
                         <div className="flex">
                             <div className="text-2xl py-2 font-serif">{item.title}</div>
-
-                            <Link to={`/content/${item.id}`} className="p-0">
+                        
+                            <Link state={{ content: item}} to={`/content/edit/${item.id}`}  className="p-0">
                                 <SquarePenIcon className="text-white" />
                             </Link>
 
