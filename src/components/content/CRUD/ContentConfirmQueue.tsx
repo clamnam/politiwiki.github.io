@@ -1,7 +1,7 @@
 import Page from "@/components/page/Page";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { CheckCheckIcon } from "@/components/ui/check-check";
 import { XIcon } from "@/components/ui/x";
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued';
@@ -99,7 +99,8 @@ const ContentConfirmQueue = () => {
         console.log("content", content);
 
         return (
-            <div className="text-white">
+
+            <><div className="text-white">
                 {content && Array.isArray(content) &&
                     content
                         .filter(item => item.queue != "[]")
@@ -107,6 +108,8 @@ const ContentConfirmQueue = () => {
                             let parsedQueue;
                             try {
                                 parsedQueue = JSON.parse(item.queue);
+                                // Always use 0 as the queue index since you're accessing the first item in each content's queue
+                                const queueIndex = 0; // This is the actual index in the queue array
                                 if (parsedQueue[0] != undefined) {
                                     parsedQueue = parsedQueue[0];
                                 }
@@ -117,10 +120,10 @@ const ContentConfirmQueue = () => {
                             if (!parsedQueue) {
                                 return null;
                             }
-   
+
                             return (
                                 <div className="text-white" key={index}>
-                                    <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+                                    <hr className="h-px my-4  bg-gray-200 border-0 dark:bg-gray-700" />
                                     <div className="m-4">
                                         {item?.id}
                                         {item?.status === "Pending" ? (
@@ -130,17 +133,16 @@ const ContentConfirmQueue = () => {
                                         )}
                                         <div className="text-2xl font-serif">{parsedQueue?.title}</div>
                                         <div className="text-lg">{parsedQueue?.content_body}</div>
-                                        <Dialog  >
+                                        <Dialog>
                                             <DialogTrigger asChild>
                                                 <Button>
                                                     <CheckCheckIcon
                                                         className="cursor-pointer text-white rounded-sm bg-green-400"
-                                                        size={20}
-                                                    />
+                                                        size={20} />
                                                 </Button>
                                             </DialogTrigger>
                                             <DialogContent className=" min-w-10/12 sm:max-w-[425px] bg-neutral-800 text-white">
-                                                <div >
+                                                <div>
 
                                                     <DialogHeader>
                                                         <DialogTitle>APPROVE CONTENT?</DialogTitle>
@@ -152,7 +154,7 @@ const ContentConfirmQueue = () => {
                                                         <div className="font-serif">Section Title :</div>
                                                         <div className="overflow-scroll text-white text-xs items-center">
                                                             {parsedQueue?.title}
-                                                            
+
 
                                                         </div>
                                                     </div>
@@ -161,15 +163,16 @@ const ContentConfirmQueue = () => {
                                                         <div className="font-serif">Section body :</div>
                                                         <div className="items-center">
                                                             {item?.status === "Pending" ? (
-                                                        parsedQueue?.content_body
-                                                            ):(<ReactDiffViewer oldValue={content[index].content_body} newValue={parsedQueue?.content_body} compareMethod={DiffMethod.WORDS_WITH_SPACE} />)}
+                                                                parsedQueue?.content_body
+                                                            ) : (<ReactDiffViewer oldValue={content[index].content_body} newValue={parsedQueue?.content_body} compareMethod={DiffMethod.WORDS_WITH_SPACE} />)}
                                                         </div>
                                                     </div>
                                                     <DialogFooter>
                                                         <Button
                                                             variant="submit"
                                                             onClick={() => {
-                                                                form.setValue('queue_index', index);
+                                                                // Always use 0 since you're only showing the first queue item per content
+                                                                form.setValue('queue_index', 0);
                                                                 form.handleSubmit(onSubmit)();
                                                             }}
                                                             type="submit"
@@ -187,20 +190,19 @@ const ContentConfirmQueue = () => {
                                         <Button className="m-0 p-0">
                                             <XIcon
                                                 className="cursor-pointer text-white rounded-sm bg-red-400"
-                                                size={50}
-                                            />
+                                                size={50} />
                                         </Button>
                                     </div>
                                 </div>
                             );
                         })}
-            </div>
+            </div></>
         );
     };
 
     return (
         <div className="text-white">
-
+            <Link className="m-2 hover:underline text-white underline-offset-8" to={`/page/${id}`}> &lt; Back</Link>
             <div className=" text-neutral-500 justify-between my-8  ">
                 content queue
                 <div className="font-serif font-medium text-white text-4xl">

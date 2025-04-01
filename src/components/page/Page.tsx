@@ -41,14 +41,14 @@ const Page = () => {
         //     }
         // }
         if (content) {
-            console.log(content);
+            // console.log(content);
             const pendingCount: number = content.filter((item: Page) => item.queue!="[]").length;
             setPending(pendingCount);
         }
     }, [content, pending]);
 
     const rendercontent = (content: Page[]) => (
-        console.log(content),
+        // console.log(content),
         <div>
             {content.filter(item => item.status != "Pending")
             .map((item, index) => {
