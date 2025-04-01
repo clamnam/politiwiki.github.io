@@ -108,9 +108,9 @@ const ContentConfirmQueue = () => {
                             let parsedQueue;
                             try {
                                 parsedQueue = JSON.parse(item.queue);
-                                const queueIndex = 0; // The index we'll use consistently
+                                const queueIndex = 0; // The index for use
                                 
-                                // Use the variable here
+                               
                                 if (parsedQueue[queueIndex] != undefined) {
                                     parsedQueue = parsedQueue[queueIndex];
                                 }
