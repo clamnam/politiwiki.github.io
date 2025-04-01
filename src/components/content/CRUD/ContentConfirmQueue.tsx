@@ -108,10 +108,11 @@ const ContentConfirmQueue = () => {
                             let parsedQueue;
                             try {
                                 parsedQueue = JSON.parse(item.queue);
-                                // Always use 0 as the queue index since you're accessing the first item in each content's queue
-                                const queueIndex = 0; // This is the actual index in the queue array
-                                if (parsedQueue[0] != undefined) {
-                                    parsedQueue = parsedQueue[0];
+                                const queueIndex = 0; // The index we'll use consistently
+                                
+                                // Use the variable here
+                                if (parsedQueue[queueIndex] != undefined) {
+                                    parsedQueue = parsedQueue[queueIndex];
                                 }
                             } catch (err) {
                                 console.error("Failed to parse queue", err);
@@ -125,7 +126,6 @@ const ContentConfirmQueue = () => {
                                 <div className="text-white" key={index}>
                                     <hr className="h-px my-4  bg-gray-200 border-0 dark:bg-gray-700" />
                                     <div className="m-4">
-                                        {item?.id}
                                         {item?.status === "Pending" ? (
                                             <div className="text-red-500">New Content</div>
                                         ) : (
@@ -171,7 +171,7 @@ const ContentConfirmQueue = () => {
                                                         <Button
                                                             variant="submit"
                                                             onClick={() => {
-                                                                // Always use 0 since you're only showing the first queue item per content
+                                                                console.log("Setting queue_index to 0"); // Add this debug log
                                                                 form.setValue('queue_index', 0);
                                                                 form.handleSubmit(onSubmit)();
                                                             }}
