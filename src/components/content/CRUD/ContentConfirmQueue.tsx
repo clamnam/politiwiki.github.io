@@ -102,7 +102,7 @@ const ContentConfirmQueue = () => {
             <div className="text-white">
                 {content && Array.isArray(content) &&
                     content
-                        .filter(item => typeof item.queue === "string")
+                        .filter(item => item.queue != "[]")
                         .map((item, index) => {
                             let parsedQueue;
                             try {
