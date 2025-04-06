@@ -33,7 +33,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/pages" element={<Page />} />
-            <Route path="/page/:id/queue/" element={<ContentConfirmQueue />} />
+            <Route path="/page/:id/review/" element={<ContentConfirmQueue />} />
 
             <Route path="/page" element={<PageWrapper />}>
               <Route path=":id" element={<Page />} />

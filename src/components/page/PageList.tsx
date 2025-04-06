@@ -89,16 +89,17 @@ export default function PageList() {
                     </Button> : null}
                 </div>
                 {pageTypeData.map((typeData, typeIndex) => (
-                    <div key={typeIndex} className="my-10">
+                    <div key={typeIndex} className="my-2">
                         <h2 className="text-2xl mb-2 font-serif">{typeData.name}</h2>
                         {typeData.pages.length > 0 ? (
                             typeData.pages.map((item, index) => (
                                 <div key={item.id || index}>
-                                    <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
-
-                                    <Button variant="destructive" className="hover:bg-red-600">
-                                        <Link className=' 0 p-4 text-xl font-serif' to={`/page/${item?.id}`}>{item?.title}</Link>
-                                    </Button>
+                                    <hr className="h-px  bg-gray-200 border-0 dark:bg-gray-700" />
+                                    <Link className=' text-xl font-serif' to={`/page/${item?.id}`}>
+                                    <div  className="px-4 py-1 hover:bg-red-600">
+{item?.title}
+                                    </div>
+                                    </Link>
                                 </div>
                             ))
                         ) : (

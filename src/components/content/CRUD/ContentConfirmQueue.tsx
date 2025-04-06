@@ -15,6 +15,7 @@ import {
     DialogTrigger,
     DialogDescription
 } from "@/components/ui/dialog"
+
 import TokenService from "@/api/tokenService";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -26,6 +27,9 @@ const formSchema = z.object({
 })
 
 interface Content {
+    updated_at: string;
+    created_at: string;
+    history: string;
     id: string;
     title: string;
     content_body: string;
@@ -33,10 +37,13 @@ interface Content {
     status: string;
 }
 
+
 const ContentConfirmQueue = () => {
     const { id } = useParams();
     const [data, setData] = useState<Page | null>(null);
     const [content, setContent] = useState<Content[]>();
+    const [showContentQueue, setShowContentQueue] = useState(true);
+
     const navigate = useNavigate();
     // const [pending, setPending] = useState(0);
     // const { execute } = useApi();
@@ -48,6 +55,16 @@ const ContentConfirmQueue = () => {
             queue_index: -1,
         },
     })
+
+    const formatDate = (dateStr: string): string => {
+        return new Date(dateStr).toLocaleString("en-IE", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      };
 
     async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
         const token = TokenService.tokenRetrieval();
@@ -131,8 +148,18 @@ const ContentConfirmQueue = () => {
                                         ) : (
                                             <div className="text-green-500">edit</div>
                                         )}
+                                        <div className="flex justify-between">
+                                        <div>
                                         <div className="text-2xl font-serif">{parsedQueue?.title}</div>
                                         <div className="text-lg">{parsedQueue?.content_body}</div>
+                                        </div>
+                                        <div>
+
+                                        <div className="text-sm">created : {formatDate(item?.created_at)}</div>
+                                        {item?.updated_at?<div className="text-sm">updated : {formatDate(item?.updated_at)}</div>:null}
+                                        </div>
+
+                                        </div>
                                         <Dialog>
                                             <DialogTrigger asChild>
                                                 <Button>
@@ -199,16 +226,68 @@ const ContentConfirmQueue = () => {
             </div></>
         );
     };
+    const renderContentHistory = () => {
+        console.log("content", content);
 
+        return (
+
+            <><div className="text-white">
+                {content && Array.isArray(content) &&
+                    content
+                        .filter(item => item.history != "[]")
+                        .map((item, index) => {
+                            let parsedHistory;
+                            try {
+                                parsedHistory = JSON.parse(item.queue);
+                                const queueIndex = 0; // The index for use
+                                
+                            
+                                if (parsedHistory[queueIndex] != undefined) {
+                                    parsedHistory = parsedHistory[queueIndex];
+                                }
+                            } catch (err) {
+                                console.error("Failed to parse queue", err);
+                                parsedHistory = {};
+                            }
+                            if (!parsedHistory) {
+                                return null;
+                            }
+
+                            return (
+                                <div className="text-white" key={index}>
+                                    <hr className="h-px my-4  bg-gray-200 border-0 dark:bg-gray-700" />
+                                    <div className="flex justify-between m-4">
+                                  <div >
+                                        <div className="text-2xl font-serif">{parsedHistory?.title}</div>
+                                        <div className="text-lg">{parsedHistory?.content_body}</div>
+                                        </div>
+                                        <div>
+
+                                        {parsedHistory?.created_at?<div className="text-sm">updated : {formatDate(parsedHistory?.created_at)}</div>:null}
+                                        {parsedHistory?.updated_at?<div className="text-sm">updated : {formatDate(parsedHistory?.updated_at)}</div>:null}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            );
+                        })}
+            </div></>
+        );
+    };
     return (
         <div className="text-white">
             <Link className="m-2 hover:underline text-white underline-offset-8" to={`/page/${id}`}> &lt; Back</Link>
             <div className=" text-neutral-500 justify-between my-8  ">
-                content queue
-                <div className="font-serif font-medium text-white text-4xl">
+           
+            <div className="font-serif font-medium text-white text-4xl">
                     {data?.title}
+                    
+
                 </div>
-                {renderContentQueue()}
+                <Button className={`${showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}onClick={()=>{setShowContentQueue(true)}}>Content queue</Button>
+                <Button className={`${!showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`} onClick={()=>{setShowContentQueue(false)}}>Content History</Button>
+                {showContentQueue?renderContentQueue():renderContentHistory()}
+                
 
             </div>
             {
