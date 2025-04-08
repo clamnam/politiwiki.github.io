@@ -1,299 +1,124 @@
-import Page from "@/components/page/Page";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { CheckCheckIcon } from "@/components/ui/check-check";
-import { XIcon } from "@/components/ui/x";
-import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer-continued';
-import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    DialogDescription
-} from "@/components/ui/dialog"
-
+import { Button } from "@/components/ui/button";
+import axios from "axios";
 import TokenService from "@/api/tokenService";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useContentData } from "./useContentData";
+import ContentQueueItem from "./ContentQueueItem";
+import ContentHistoryItem from "./ContentHistoryItem";
+import { QueueFormData } from "../../../types";
 
 const formSchema = z.object({
-    queue_index: z.number().int().min(0),
-
-})
-
-interface Content {
-    updated_at: string;
-    created_at: string;
-    history: string;
-    id: string;
-    title: string;
-    content_body: string;
-    queue: string;
-    status: string;
-}
-
+  queue_index: z.number().int().min(0),
+});
 
 const ContentConfirmQueue = () => {
-    const { id } = useParams();
-    const [data, setData] = useState<Page | null>(null);
-    const [content, setContent] = useState<Content[]>();
-    const [showContentQueue, setShowContentQueue] = useState(true);
+  const { id } = useParams();
+  const [showContentQueue, setShowContentQueue] = useState(true);
+  const navigate = useNavigate();
+  const { page, content, isLoading, error } = useContentData(id);
 
-    const navigate = useNavigate();
-    // const [pending, setPending] = useState(0);
-    // const { execute } = useApi();
-    // const { isLoggedIn } = useAuth();
+  const form = useForm<QueueFormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      queue_index: -1,
+    },
+  });
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            queue_index: -1,
-        },
-    })
-
-    const formatDate = (dateStr: string): string => {
-        return new Date(dateStr).toLocaleString("en-IE", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-      };
-
-    async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
-        const token = TokenService.tokenRetrieval();
-        const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/${id}`;
-        try {
-            const response = await axios.patch(
-                url,
-                values,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            console.log("Response:", response);
-            navigate(`/page/${id}`);
-            // Show success message or redirect user
-        } catch (error) {
-            console.error("Error submitting form:", error);
-            // Handle error - show error message to user
+  async function onSubmit(values: QueueFormData): Promise<void> {
+    const token = TokenService.tokenRetrieval();
+    const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/${id}`;
+    
+    try {
+      const response = await axios.patch(
+        url,
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+
+      console.log("Response:", response);
+      navigate(`/page/${id}`);
+    } catch (error) {
+      console.error("Error submitting form:", error);
     }
+  }
 
-    useEffect(() => {
+  const handleApprove = (index: number) => {
+    form.setValue('queue_index', 0);
+    form.handleSubmit(onSubmit)();
+    console.log("Approve clicked for index:", index);
+  };
 
-        try {
-            const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}${id}`;
-            axios.get(apiUrl).then((response) => {
-                setData(response.data);
+  if (isLoading) {
+    return <div className="text-white">Loading...</div>;
+  }
 
-            });
-        } catch (err) {
-            console.error(err);
-        }
-        try {
-            const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/bypage/${id}`;
-            axios.get(apiUrl).then((response) => {
-                setContent(response.data);
-            });
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
 
-        } catch (err) {
-            console.error(err);
-        }
-
-    }, [id]);
-
-    const renderContentQueue = () => {
-        console.log("content", content);
-
-        return (
-
-            <><div className="text-white">
-                {content && Array.isArray(content) &&
-                    content
-                        .filter(item => item.queue != "[]")
-                        .map((item, index) => {
-                            let parsedQueue;
-                            try {
-                                parsedQueue = JSON.parse(item.queue);
-                                const queueIndex = 0; // The index for use
-                                
-                               
-                                if (parsedQueue[queueIndex] != undefined) {
-                                    parsedQueue = parsedQueue[queueIndex];
-                                }
-                            } catch (err) {
-                                console.error("Failed to parse queue", err);
-                                parsedQueue = {};
-                            }
-                            if (!parsedQueue) {
-                                return null;
-                            }
-
-                            return (
-                                <div className="text-white" key={index}>
-                                    <hr className="h-px my-4  bg-gray-200 border-0 dark:bg-gray-700" />
-                                    <div className="m-4">
-                                        {item?.status === "Pending" ? (
-                                            <div className="text-red-500">New Content</div>
-                                        ) : (
-                                            <div className="text-green-500">edit</div>
-                                        )}
-                                        <div className="flex justify-between">
-                                        <div>
-                                        <div className="text-2xl font-serif">{parsedQueue?.title}</div>
-                                        <div className="text-lg">{parsedQueue?.content_body}</div>
-                                        </div>
-                                        <div>
-
-                                        <div className="text-sm">created : {formatDate(item?.created_at)}</div>
-                                        {item?.updated_at?<div className="text-sm">updated : {formatDate(item?.updated_at)}</div>:null}
-                                        </div>
-
-                                        </div>
-                                        <Dialog>
-                                            <DialogTrigger asChild>
-                                                <Button>
-                                                    <CheckCheckIcon
-                                                        className="cursor-pointer text-white rounded-sm bg-green-400"
-                                                        size={20} />
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent className=" min-w-10/12 sm:max-w-[425px] bg-neutral-800 text-white">
-                                                <div>
-
-                                                    <DialogHeader>
-                                                        <DialogTitle>APPROVE CONTENT?</DialogTitle>
-                                                        <DialogDescription>
-                                                            Are you sure you want to approve this section?
-                                                        </DialogDescription>
-                                                    </DialogHeader>
-                                                    <div className="text-2xl gap-4 py-4">
-                                                        <div className="font-serif">Section Title :</div>
-                                                        <div className="overflow-scroll text-white text-xs items-center">
-                                                            {parsedQueue?.title}
-
-
-                                                        </div>
-                                                    </div>
-                                                    <hr className="h-px my-4 bg-gray-200 border-0" />
-                                                    <div className="text-lg gap-4 py-4">
-                                                        <div className="font-serif">Section body :</div>
-                                                        <div className="items-center">
-                                                            {item?.status === "Pending" ? (
-                                                                parsedQueue?.content_body
-                                                            ) : (<ReactDiffViewer oldValue={content[index].content_body} newValue={parsedQueue?.content_body} compareMethod={DiffMethod.WORDS_WITH_SPACE} />)}
-                                                        </div>
-                                                    </div>
-                                                    <DialogFooter>
-                                                        <Button
-                                                            variant="submit"
-                                                            onClick={() => {
-                                                                console.log("Setting queue_index to 0"); // Add this debug log
-                                                                form.setValue('queue_index', 0);
-                                                                form.handleSubmit(onSubmit)();
-                                                            }}
-                                                            type="submit"
-                                                        >
-                                                            {item?.status === "Pending" ? (
-                                                                <div className="text-green-500">approve new section</div>
-                                                            ) : (
-                                                                <div className="text-green-500">approve change</div>
-                                                            )}                                                    </Button>
-                                                    </DialogFooter>
-                                                </div>
-
-                                            </DialogContent>
-                                        </Dialog>
-                                        <Button className="m-0 p-0">
-                                            <XIcon
-                                                className="cursor-pointer text-white rounded-sm bg-red-400"
-                                                size={50} />
-                                        </Button>
-                                    </div>
-                                </div>
-                            );
-                        })}
-            </div></>
-        );
-    };
-    const renderContentHistory = () => {
-        console.log("content", content);
-
-        return (
-
-            <><div className="text-white">
-                {content && Array.isArray(content) &&
-                    content
-                        .filter(item => item.history != "[]")
-                        .map((item, index) => {
-                            let parsedHistory;
-                            try {
-                                parsedHistory = JSON.parse(item.queue);
-                                const queueIndex = 0; // The index for use
-                                
-                            
-                                if (parsedHistory[queueIndex] != undefined) {
-                                    parsedHistory = parsedHistory[queueIndex];
-                                }
-                            } catch (err) {
-                                console.error("Failed to parse queue", err);
-                                parsedHistory = {};
-                            }
-                            if (!parsedHistory) {
-                                return null;
-                            }
-
-                            return (
-                                <div className="text-white" key={index}>
-                                    <hr className="h-px my-4  bg-gray-200 border-0 dark:bg-gray-700" />
-                                    <div className="flex justify-between m-4">
-                                  <div >
-                                        <div className="text-2xl font-serif">{parsedHistory?.title}</div>
-                                        <div className="text-lg">{parsedHistory?.content_body}</div>
-                                        </div>
-                                        <div>
-
-                                        {parsedHistory?.created_at?<div className="text-sm">updated : {formatDate(parsedHistory?.created_at)}</div>:null}
-                                        {parsedHistory?.updated_at?<div className="text-sm">updated : {formatDate(parsedHistory?.updated_at)}</div>:null}
-                                        </div>
-
-                                    </div>
-                                </div>
-                            );
-                        })}
-            </div></>
-        );
-    };
-    return (
-        <div className="text-white">
-            <Link className="m-2 hover:underline text-white underline-offset-8" to={`/page/${id}`}> &lt; Back</Link>
-            <div className=" text-neutral-500 justify-between my-8  ">
-           
-            <div className="font-serif font-medium text-white text-4xl">
-                    {data?.title}
-                    
-
-                </div>
-                <Button className={`${showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}onClick={()=>{setShowContentQueue(true)}}>Content queue</Button>
-                <Button className={`${!showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`} onClick={()=>{setShowContentQueue(false)}}>Content History</Button>
-                {showContentQueue?renderContentQueue():renderContentHistory()}
-                
-
-            </div>
-            {
-            }
+  return (
+    <div className="text-white">
+      <Link className="m-2 hover:underline text-white underline-offset-8" to={`/page/${id}`}>
+        &lt; Back
+      </Link>
+      
+      <div className="text-neutral-500 justify-between my-8">
+        <div className="font-serif font-medium text-white text-4xl">
+          {page?.title}
         </div>
+        
+        <div className="flex space-x-4 mb-6">
+          <Button 
+            className={`${showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
+            onClick={() => setShowContentQueue(true)}
+          >
+            Content queue
+          </Button>
+          <Button 
+            className={`${!showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`} 
+            onClick={() => setShowContentQueue(false)}
+          >
+            Content History
+          </Button>
+        </div>
+        
+        {showContentQueue ? (
+          <div>
+            {content && Array.isArray(content) && content
+              .filter(item => item.queue !== "[]")
+              .map((item, index) => (
+                <ContentQueueItem 
+                  key={index}
+                  item={item}
+                  index={index}
+                  onApprove={handleApprove}
+                />
+              ))}
+          </div>
+        ) : (
+          <div>
+            {content && Array.isArray(content) && content
+              .filter(item => item.history !== "[]")
+              .map((item, index) => (
+                <ContentHistoryItem 
+                  key={index}
+                  item={item}
+                  index={index}
+                />
+              ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
-    )
-}
 export default ContentConfirmQueue;

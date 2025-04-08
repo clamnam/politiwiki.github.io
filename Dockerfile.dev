@@ -1,0 +1,14 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install dependencies first to leverage Docker caching
+COPY package*.json ./
+RUN npm install
+
+# Copy the rest of the project (will be overridden by volume in dev)
+COPY . .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host"]
