@@ -1,6 +1,7 @@
 export interface Content {
   updated_at: string;
   created_at: string;
+  isDeleted: boolean;
   history: string;
   id: string;
   title: string;

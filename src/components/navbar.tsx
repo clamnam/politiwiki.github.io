@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 const Navbar = () => {
     const [isNavHidden, setIsNavHidden] = useState(false);
     const { isLoggedIn, logout } = useAuth();
-    
+
     const NavReduce = () => {
         let lastScrollY = window.scrollY;
 
@@ -36,22 +36,22 @@ const Navbar = () => {
             </ul>
         );
     }
-    
+
     const LogOut = () => {
         return (
             <ul className="flex  cursor-pointer">
                 <li className="">
-                <Link to={window.location.pathname}>
-                <div onClick={logout} className="  m-2 hover:underline text-white underline-offset-8">Log Out</div>
+                    <Link to={window.location.pathname}>
+                        <div onClick={logout} className="  m-2 hover:underline text-white underline-offset-8">Log Out</div>
                     </Link>
                 </li>
             </ul>
         );
     }
-    
+
     return (
         <div className={``}>
-            <div className={`sm:bg-transparent bg-zinc-900 min-w-full fixed text-lg top-0 ${isNavHidden ? 'hide-nav' : 'show-nav'}`}>
+            <div className={`  bg-neutral-900 min-w-full fixed text-lg top-0 ${isNavHidden ? 'hide-nav' : 'show-nav'}`}>
                 <div className="dropdown flex justify-between items-center w-full">
                     <ul className="flex">
                         <li className="m-2 hover:underline text-white underline-offset-8">
@@ -61,7 +61,7 @@ const Navbar = () => {
                             <Link to="/pages" className="text-white">Pages</Link>
                         </li>
                     </ul>
-                    {isLoggedIn ? <LogOut/> : <Login/>}
+                    {isLoggedIn ? <LogOut /> : <Login />}
                 </div>
             </div>
         </div>

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useApi } from "../hooks/useApi";
 import { Button } from "@/components/ui/button";
 import { SquarePenIcon } from "../ui/square-pen";
+import ContentDelete from "../content/CRUD/ContentDelete";
+
 import PageList from "./PageList";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
@@ -14,6 +16,7 @@ import {
     AlertTitle,
 } from "@/components/ui/alert"
 import ContentConfirmButton from "../content/CRUD/ContentQueueButton";
+import TokenService from "@/api/tokenService";
 // import ContentConfirmButton from "../content/CRUD/ContentConfirmButton";
 
 interface Page {
@@ -22,7 +25,6 @@ interface Page {
     title: string;
     content_body: string;
     queue: string;
-
 }
 
 const Page = () => {
@@ -32,7 +34,29 @@ const Page = () => {
     const { execute } = useApi();
     const { id } = useParams();
     const { isLoggedIn } = useAuth();
+    const navigate = useNavigate();
 
+    const handleDelete = async (id: number) => {
+        console.log("deleting", id);
+        const token = TokenService.tokenRetrieval();
+        const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/queue/${id}`;
+
+        try {
+            const response = await axios.delete(
+                url,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log("Response:", response);
+            navigate(`/page/${id}`);
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        }
+    };
 
     useEffect(() => {
         // if (content) {
@@ -42,7 +66,7 @@ const Page = () => {
         // }
         if (content) {
             // console.log(content);
-            const pendingCount: number = content.filter((item: Page) => item.queue!="[]").length;
+            const pendingCount: number = content.filter((item: Page) => item.queue != "[]").length;
             setPending(pendingCount);
         }
     }, [content, pending]);
@@ -51,24 +75,30 @@ const Page = () => {
         // console.log(content),
         <div>
             {content.filter(item => item.status != "Pending")
-            .map((item, index) => {
-                // console.log(item);
-                return (
-                    <div key={index} className="break-words">
-                        <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
-                        <div className="flex">
-                            <div className="text-2xl py-2 font-serif">{item.title}</div>
-                        
-                            <Link state={{ content: item}} to={`/content/edit/${item.id}`}  className="p-0">
-                                <SquarePenIcon className="text-white" />
-                            </Link>
+                .map((item, index) => {
+                    // console.log(item);
+                    return (
+                        <div key={index} className="break-words">
+                            <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+                            <div className="flex space-between place-content-between">
+                                <div className="text-2xl py-2 font-serif">{item.title}</div>
+
+                                <div>
+                                    <div className="flex">
+                                        <Link state={{ content: item }} to={`/content/edit/${item.id}`} className="hover:text-green-500 p-0">
+                                            <SquarePenIcon className="" />
+                                        </Link>
+
+                                        <ContentDelete onDelete={handleDelete} id={Number(id)} content={item} />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className="text-base ">{item.content_body}</div>
 
                         </div>
-                        <div className="text-base ">{item.content_body}</div>
-
-                    </div>
-                );
-            })}
+                    );
+                })}
         </div>
     );
 
@@ -102,9 +132,9 @@ const Page = () => {
             <div className="">
 
                 <div className=" text-white  font-medium ">
-                {pending ?
-                    <ContentConfirmButton id={Number(id)} value={pending} /> : null
-                }
+                    {pending ?
+                        <ContentConfirmButton id={Number(id)} value={pending} /> : null
+                    }
                     <div className=" flex justify-between my-8 font-medium text-4xl ">
 
                         <div className="font-serif py-2">{data.title}</div>
@@ -112,7 +142,7 @@ const Page = () => {
                             <Link to="/content/create" state={{ page: id }}>Create Content for this page?</Link>
                         </Button> : null}
                     </div>
-                    
+
                     {content && rendercontent(content)}
 
                     {!content && <Alert variant="destructive">

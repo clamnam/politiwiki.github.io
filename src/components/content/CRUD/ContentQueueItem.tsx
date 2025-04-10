@@ -43,11 +43,12 @@ const ContentQueueItem = ({ item, index, onApprove, onReject }: ContentQueueItem
     <div className="text-white">
       <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
       <div className="m-4">
-        {item?.status === "Pending" ? (
+        {item?.status === "Pending" && item?.isDeleted === false ? (
           <div className="text-red-500">New Content</div>
-        ) : (
-          <div className="text-green-500">edit</div>
-        )}
+        ) : item?.isDeleted === true ? (
+          <div className="text-purple-600">Delete</div>
+        ) : <div className="text-green-500">Edit</div>
+}
         <div className="flex justify-between">
           <div>
             <div className="text-2xl font-serif">{parsedQueue?.title}</div>

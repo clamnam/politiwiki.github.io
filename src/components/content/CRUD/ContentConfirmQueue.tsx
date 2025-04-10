@@ -20,6 +20,8 @@ const ContentConfirmQueue = () => {
   const [showContentQueue, setShowContentQueue] = useState(true);
   const navigate = useNavigate();
   const { page, content, isLoading, error } = useContentData(id);
+  const auth = TokenService.tokenRetrieval();
+  const isLoggedIn = auth !== null;
 
   const form = useForm<QueueFormData>({
     resolver: zodResolver(formSchema),
@@ -31,7 +33,7 @@ const ContentConfirmQueue = () => {
   async function onSubmit(values: QueueFormData): Promise<void> {
     const token = TokenService.tokenRetrieval();
     const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/${id}`;
-    
+
     try {
       const response = await axios.patch(
         url,
@@ -57,7 +59,7 @@ const ContentConfirmQueue = () => {
   };
 
   if (isLoading) {
-    return <div className="text-white">Loading...</div>;
+    return <div className="">Loading...</div>;
   }
 
   if (error) {
@@ -69,33 +71,35 @@ const ContentConfirmQueue = () => {
       <Link className="m-2 hover:underline text-white underline-offset-8" to={`/page/${id}`}>
         &lt; Back
       </Link>
-      
+
       <div className="text-neutral-500 justify-between my-8">
         <div className="font-serif font-medium text-white text-4xl">
           {page?.title}
         </div>
-        
+
         <div className="flex space-x-4 mb-6">
-          <Button 
+          <Button
             className={`${showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
             onClick={() => setShowContentQueue(true)}
           >
             Content queue
           </Button>
-          <Button 
-            className={`${!showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`} 
+          {isLoggedIn?(
+          <Button
+            className={`${!showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
             onClick={() => setShowContentQueue(false)}
           >
             Content History
           </Button>
+          ):null}
         </div>
-        
-        {showContentQueue ? (
+
+        {showContentQueue  ? (
           <div>
             {content && Array.isArray(content) && content
               .filter(item => item.queue !== "[]")
               .map((item, index) => (
-                <ContentQueueItem 
+                <ContentQueueItem
                   key={index}
                   item={item}
                   index={index}
@@ -104,11 +108,12 @@ const ContentConfirmQueue = () => {
               ))}
           </div>
         ) : (
+          
           <div>
             {content && Array.isArray(content) && content
               .filter(item => item.history !== "[]")
               .map((item, index) => (
-                <ContentHistoryItem 
+                <ContentHistoryItem
                   key={index}
                   item={item}
                   index={index}
