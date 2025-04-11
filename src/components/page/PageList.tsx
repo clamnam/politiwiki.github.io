@@ -63,13 +63,13 @@ export default function PageList() {
 
     if (!hasPages) {
         return (
-            <Card className='text-white p-6 m-6'>
-                <div className='text-lg  text-white text-serif'>Welcome to the your new wiki</div>
+            <Card className=' p-6 m-6'>
+                <div className='text-lg   text-serif'>Welcome to the your new wiki</div>
                 <div className="flex w-full items-center p-6">
                     <Button
                         variant="default"
                         size="lg"
-                        className="text-white border border-red-500 hover:bg-red-500  shadow-md rounded-lg px-6 py-3 transition-colors"
+                        className=" border border-red-500 hover:bg-red-500  rounded-lg px-6 py-3 transition-colors"
                     >
                         <Link to="/page/create">start by creating some pages create one?</Link>
                     </Button>
@@ -80,9 +80,9 @@ export default function PageList() {
 
     return (
         <>
-            <div className="px-2 min-w-full text-white py-4">
+            <div className="px-2 min-w-full  py-4">
                 <div className='flex justify-between'>
-                <div className='my-1 text-4xl font-serif'>Page List</div>
+                    <div className='my-1 text-4xl font-serif'>Page List</div>
 
                     {isLoggedIn ? <Button variant="primary" className="">
                         <Link className='flex' to="/page/create">create one?</Link>
@@ -94,11 +94,11 @@ export default function PageList() {
                         {typeData.pages.length > 0 ? (
                             typeData.pages.map((item, index) => (
                                 <div key={item.id || index}>
-                                    <hr className="h-px  bg-gray-200 border-0 dark:bg-gray-700" />
+                                    <hr className="h-px  bg-foreground border-0 " />
                                     <Link className=' text-xl font-serif' to={`/page/${item?.id}`}>
-                                    <div  className="px-4 py-1 hover:bg-red-600">
-{item?.title}
-                                    </div>
+                                        <div className="px-4 py-1 hover:bg-stone-400  ">
+                                            {item?.title}
+                                        </div>
                                     </Link>
                                 </div>
                             ))

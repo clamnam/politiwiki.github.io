@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { ThemeToggle } from '../utilities/ThemeToggle';
 // import '../assets/app.css'
 
 const Navbar = () => {
@@ -26,12 +27,12 @@ const Navbar = () => {
 
     const Login = () => {
         return (
-            <ul className="flex">
+            <ul className="flex text-white">
                 <li className="m-2 hover:underline underline-offset-8">
-                    <Link to="/login" className="text-white">Login</Link>
+                    <Link to="/login" className="">Login</Link>
                 </li>
                 <li className="m-2 hover:underline underline-offset-8">
-                    <Link to="/register" className="text-white">Register</Link>
+                    <Link to="/register" className="">Register</Link>
                 </li>
             </ul>
         );
@@ -42,7 +43,7 @@ const Navbar = () => {
             <ul className="flex  cursor-pointer">
                 <li className="">
                     <Link to={window.location.pathname}>
-                        <div onClick={logout} className="  m-2 hover:underline text-white underline-offset-8">Log Out</div>
+                        <div onClick={logout} className="  m-2 hover:underline  underline-offset-8">Log Out</div>
                     </Link>
                 </li>
             </ul>
@@ -51,17 +52,21 @@ const Navbar = () => {
 
     return (
         <div className={``}>
-            <div className={`  bg-neutral-900 min-w-full fixed text-lg top-0 ${isNavHidden ? 'hide-nav' : 'show-nav'}`}>
+            <div className={` text-background bg-foreground min-w-full fixed text-lg top-0 ${isNavHidden ? 'hide-nav' : 'show-nav'}`}>
                 <div className="dropdown flex justify-between items-center w-full">
                     <ul className="flex">
-                        <li className="m-2 hover:underline text-white underline-offset-8">
-                            <Link to="/" className="text-white">Home</Link>
+                        <li className="m-2 hover:underline  underline-offset-8">
+                            <Link to="/" className="">Home</Link>
                         </li>
                         <li className="m-2 hover:underline underline-offset-8">
-                            <Link to="/pages" className="text-white">Pages</Link>
+                            <Link to="/pages" className="">Pages</Link>
                         </li>
                     </ul>
-                    {isLoggedIn ? <LogOut /> : <Login />}
+                    <div className="flex items-center gap-4">
+                    <ThemeToggle />
+
+                        {isLoggedIn ? <LogOut /> : <Login />}
+                    </div>
                 </div>
             </div>
         </div>

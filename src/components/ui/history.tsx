@@ -1,39 +1,74 @@
 'use client';
 
-import type { Variants } from 'motion/react';
+import type { Transition, Variants } from 'motion/react';
 import { motion, useAnimation } from 'motion/react';
 import type { HTMLAttributes } from 'react';
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
-export interface DeleteIconHandle {
+export interface HistoryIconHandle {
   startAnimation: () => void;
   stopAnimation: () => void;
 }
 
-interface DeleteIconProps extends HTMLAttributes<HTMLDivElement> {
+interface HistoryIconProps extends HTMLAttributes<HTMLDivElement> {
   size?: number;
 }
 
-const lidVariants: Variants = {
-  normal: { y: 0 },
-  animate: { y: -1.1 },
-};
-
-const springTransition = {
+const arrowTransition: Transition = {
   type: 'spring',
-  stiffness: 500,
-  damping: 30,
+  stiffness: 250,
+  damping: 25,
 };
 
-const DeleteIcon = forwardRef<DeleteIconHandle, DeleteIconProps>(
+const arrowVariants: Variants = {
+  normal: {
+    rotate: '0deg',
+  },
+  animate: {
+    rotate: '-50deg',
+  },
+};
+
+const handTransition: Transition = {
+  duration: 0.6,
+  ease: [0.4, 0, 0.2, 1],
+};
+
+const handVariants: Variants = {
+  normal: {
+    rotate: 0,
+    originX: '50%',
+    originY: '50%',
+  },
+  animate: {
+    rotate: -360,
+  },
+};
+
+const minuteHandTransition: Transition = {
+  duration: 0.5,
+  ease: 'easeInOut',
+};
+
+const minuteHandVariants: Variants = {
+  normal: {
+    rotate: 0,
+    originX: '50%',
+    originY: '50%',
+  },
+  animate: {
+    rotate: -45,
+  },
+};
+
+const HistoryIcon = forwardRef<HistoryIconHandle, HistoryIconProps>(
   ({ onMouseEnter, onMouseLeave, className, size = 28, ...props }, ref) => {
     const controls = useAnimation();
     const isControlledRef = useRef(false);
 
     useImperativeHandle(ref, () => {
       isControlledRef.current = true;
-
       return {
         startAnimation: () => controls.start('animate'),
         stopAnimation: () => controls.start('normal'),
@@ -65,7 +100,7 @@ const DeleteIcon = forwardRef<DeleteIconHandle, DeleteIconProps>(
     return (
       <div
         className={cn(
-          `cursor-pointer select-none p-2 hover:bg-accent rounded-md transition-colors duration-200 flex items-center justify-center`,
+          'cursor-pointer select-none p-2 hover:bg-accent rounded-md transition-colors duration-200 flex items-center justify-center',
           className
         )}
         onMouseEnter={handleMouseEnter}
@@ -84,45 +119,32 @@ const DeleteIcon = forwardRef<DeleteIconHandle, DeleteIconProps>(
           strokeLinejoin="round"
         >
           <motion.g
-            variants={lidVariants}
+            transition={arrowTransition}
+            variants={arrowVariants}
             animate={controls}
-            transition={springTransition}
           >
-            <path d="M3 6h18" />
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
           </motion.g>
-          <motion.path
-            d="M19 8v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V8"
-            variants={{
-              normal: { d: 'M19 8v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V8' },
-              animate: { d: 'M19 9v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V9' },
-            }}
+          <motion.line
+            x1="12"
+            y1="12"
+            x2="12"
+            y2="7"
+            variants={handVariants}
             animate={controls}
-            transition={springTransition}
+            initial="normal"
+            transition={handTransition}
           />
           <motion.line
-            x1="10"
-            x2="10"
-            y1="11"
-            y2="17"
-            variants={{
-              normal: { y1: 11, y2: 17 },
-              animate: { y1: 11.5, y2: 17.5 },
-            }}
+            x1="12"
+            y1="12"
+            x2="16"
+            y2="14"
+            variants={minuteHandVariants}
             animate={controls}
-            transition={springTransition}
-          />
-          <motion.line
-            x1="14"
-            x2="14"
-            y1="11"
-            y2="17"
-            variants={{
-              normal: { y1: 11, y2: 17 },
-              animate: { y1: 11.5, y2: 17.5 },
-            }}
-            animate={controls}
-            transition={springTransition}
+            initial="normal"
+            transition={minuteHandTransition}
           />
         </svg>
       </div>
@@ -130,6 +152,6 @@ const DeleteIcon = forwardRef<DeleteIconHandle, DeleteIconProps>(
   }
 );
 
-DeleteIcon.displayName = 'DeleteIcon';
+HistoryIcon.displayName = 'HistoryIcon';
 
-export { DeleteIcon };
+export { HistoryIcon };

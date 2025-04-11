@@ -1,32 +1,35 @@
 'use client';
 
-import type { Variants } from 'motion/react';
+import type { Transition, Variants } from 'motion/react';
 import { motion, useAnimation } from 'motion/react';
 import type { HTMLAttributes } from 'react';
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
-export interface DeleteIconHandle {
+export interface MoonIconHandle {
   startAnimation: () => void;
   stopAnimation: () => void;
 }
 
-interface DeleteIconProps extends HTMLAttributes<HTMLDivElement> {
+interface MoonIconProps extends HTMLAttributes<HTMLDivElement> {
   size?: number;
 }
 
-const lidVariants: Variants = {
-  normal: { y: 0 },
-  animate: { y: -1.1 },
+const svgVariants: Variants = {
+  normal: {
+    rotate: 0,
+  },
+  animate: {
+    rotate: [0, -10, 10, -5, 5, 0],
+  },
 };
 
-const springTransition = {
-  type: 'spring',
-  stiffness: 500,
-  damping: 30,
+const svgTransition: Transition = {
+  duration: 1.2,
+  ease: 'easeInOut',
 };
 
-const DeleteIcon = forwardRef<DeleteIconHandle, DeleteIconProps>(
+const MoonIcon = forwardRef<MoonIconHandle, MoonIconProps>(
   ({ onMouseEnter, onMouseLeave, className, size = 28, ...props }, ref) => {
     const controls = useAnimation();
     const isControlledRef = useRef(false);
@@ -61,7 +64,6 @@ const DeleteIcon = forwardRef<DeleteIconHandle, DeleteIconProps>(
       },
       [controls, onMouseLeave]
     );
-
     return (
       <div
         className={cn(
@@ -72,7 +74,7 @@ const DeleteIcon = forwardRef<DeleteIconHandle, DeleteIconProps>(
         onMouseLeave={handleMouseLeave}
         {...props}
       >
-        <svg
+        <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           width={size}
           height={size}
@@ -82,54 +84,17 @@ const DeleteIcon = forwardRef<DeleteIconHandle, DeleteIconProps>(
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
+          variants={svgVariants}
+          animate={controls}
+          transition={svgTransition}
         >
-          <motion.g
-            variants={lidVariants}
-            animate={controls}
-            transition={springTransition}
-          >
-            <path d="M3 6h18" />
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-          </motion.g>
-          <motion.path
-            d="M19 8v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V8"
-            variants={{
-              normal: { d: 'M19 8v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V8' },
-              animate: { d: 'M19 9v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V9' },
-            }}
-            animate={controls}
-            transition={springTransition}
-          />
-          <motion.line
-            x1="10"
-            x2="10"
-            y1="11"
-            y2="17"
-            variants={{
-              normal: { y1: 11, y2: 17 },
-              animate: { y1: 11.5, y2: 17.5 },
-            }}
-            animate={controls}
-            transition={springTransition}
-          />
-          <motion.line
-            x1="14"
-            x2="14"
-            y1="11"
-            y2="17"
-            variants={{
-              normal: { y1: 11, y2: 17 },
-              animate: { y1: 11.5, y2: 17.5 },
-            }}
-            animate={controls}
-            transition={springTransition}
-          />
-        </svg>
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </motion.svg>
       </div>
     );
   }
 );
 
-DeleteIcon.displayName = 'DeleteIcon';
+MoonIcon.displayName = 'MoonIcon';
 
-export { DeleteIcon };
+export { MoonIcon };

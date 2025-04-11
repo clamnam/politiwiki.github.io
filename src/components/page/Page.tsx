@@ -15,6 +15,8 @@ import {
     AlertDescription,
     AlertTitle,
 } from "@/components/ui/alert"
+import {HistoryIcon} from "@/components/ui/history"
+
 import ContentConfirmButton from "../content/CRUD/ContentQueueButton";
 import TokenService from "@/api/tokenService";
 // import ContentConfirmButton from "../content/CRUD/ContentConfirmButton";
@@ -78,18 +80,18 @@ const Page = () => {
                 .map((item, index) => {
                     // console.log(item);
                     return (
-                        <div key={index} className="break-words">
-                            <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+                        <div key={index} className="break-words py-2">
                             <div className="flex space-between place-content-between">
                                 <div className="text-2xl py-2 font-serif">{item.title}</div>
 
                                 <div>
                                     <div className="flex">
-                                        <Link state={{ content: item }} to={`/content/edit/${item.id}`} className="hover:text-green-500 p-0">
-                                            <SquarePenIcon className="" />
+                                        <Link  state={{ content: item }} to={`/content/edit/${item.id}`} className="hover:text-green-500 p-.5">
+                                            <SquarePenIcon size={30}  />
                                         </Link>
-
-                                        <ContentDelete onDelete={handleDelete} id={Number(id)} content={item} />
+                                        <div>
+                                        <ContentDelete  onDelete={handleDelete} id={Number(id)} content={item} />
+                                        </div>
                                     </div>
                                 </div>
 
@@ -129,19 +131,29 @@ const Page = () => {
 
     if (data?.title) {
         return (
-            <div className="">
 
-                <div className=" text-white  font-medium ">
-                    {pending ?
-                        <ContentConfirmButton id={Number(id)} value={pending} /> : null
-                    }
-                    <div className=" flex justify-between my-8 font-medium text-4xl ">
+                <div className="   font-medium ">
+                
+                    
+                    <div className=" flex justify-between font-medium text-4xl ">
 
-                        <div className="font-serif py-2">{data.title}</div>
+                        <div className="font-serif pb-4">{data.title}</div>
                         {isLoggedIn && content ? <Button variant="primary" className="">
                             <Link to="/content/create" state={{ page: id }}>Create Content for this page?</Link>
                         </Button> : null}
+                        <div className="flex py-2">
+                    <Link className="pr-5 " to={`/page/${id}`}>
+                    <HistoryIcon className="p-0" size={30}  />
+                    </Link>
+                    {pending ?
+                        <ContentConfirmButton  id={Number(id)} value={pending} /> : null
+                    }
+                    
                     </div>
+                    </div>
+                    <hr className=" border-foreground" />
+
+                    
 
                     {content && rendercontent(content)}
 
@@ -156,7 +168,6 @@ const Page = () => {
                     </Alert>}
 
                 </div>
-            </div>
         );
     } else {
         return (

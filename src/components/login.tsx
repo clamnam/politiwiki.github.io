@@ -61,9 +61,9 @@ export default function Login() {
         }
     }
     return (
-        <div className="flex min-h-screen items-center justify-center text-white p-6">
+        <div className="flex min-h-screen items-center justify-center text-foreground p-6">
             <div className="text-6xl m-4">LOGIN</div>
-            <Card className="p-6 w-full max-w-sm border-white ">
+            <Card className="p-6 w-full max-w-sm border-foreground">
                 
                 <Form {...form}>
                     <div className="bg-green-400">

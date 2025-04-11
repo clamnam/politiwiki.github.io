@@ -6,7 +6,7 @@ interface ContentConfirmScreenProps {
 
 const ContentConfirmScreen = ({ id, value }: ContentConfirmScreenProps) => {
 return (
-    <Card className="flex my-4 text-white flex-col items-center justify-center min-h-screen ">
+    <Card className="flex my-4  flex-col items-center justify-center min-h-screen ">
         asd
         {id}{value.toString()}
     </Card>

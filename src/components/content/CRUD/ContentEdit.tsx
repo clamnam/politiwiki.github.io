@@ -61,7 +61,7 @@ export default function ContentEdit() {
   const diffValue = watch("content_body") || "";
 
   return (
-    <div className="p-4 space-y-8 text-white">
+    <div className="p-4 space-y-8 ">
       <ReactDiffViewer 
         oldValue={content_to_compare} 
         newValue={diffValue} 

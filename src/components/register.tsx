@@ -69,9 +69,9 @@ export default function Register() {
     
     // Rest of your component remains the same
     return (
-        <div className="flex min-h-screen items-center justify-center text-white p-6">
+        <div className="flex min-h-screen items-center justify-center text-foreground p-6">
             <div className="text-6xl m-4">REGISTER</div>
-            <Card className="p-6 w-full max-w-sm border-white ">
+            <Card className="p-6 w-full max-w-sm border-foreground ">
                 <div className="bg-green-400">
                     {status}
                 </div>

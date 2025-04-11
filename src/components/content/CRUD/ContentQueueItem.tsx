@@ -40,8 +40,8 @@ const ContentQueueItem = ({ item, index, onApprove, onReject }: ContentQueueItem
   }
 
   return (
-    <div className="text-white">
-      <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+    <div className="">
+      <hr className="h-px my-4  border-0 bg-background" />
       <div className="m-4">
         {item?.status === "Pending" && item?.isDeleted === false ? (
           <div className="text-red-500">New Content</div>
@@ -60,16 +60,16 @@ const ContentQueueItem = ({ item, index, onApprove, onReject }: ContentQueueItem
           </div>
         </div>
         
-        <Dialog>
+        <Dialog >
           <DialogTrigger asChild>
             <Button>
               <CheckCheckIcon
-                className="cursor-pointer text-white rounded-sm bg-green-400"
+                className="cursor-pointer rounded-sm bg-green-400"
                 size={20} />
             </Button>
           </DialogTrigger>
-          <DialogContent className="min-w-10/12 sm:max-w-[425px] bg-neutral-800 text-white">
-            <div>
+          <DialogContent className="min-w-10/12 sm:max-w-[425px] bg-background text-white">
+            <div className="">
               <DialogHeader>
                 <DialogTitle>APPROVE CONTENT?</DialogTitle>
                 <DialogDescription>
@@ -78,11 +78,11 @@ const ContentQueueItem = ({ item, index, onApprove, onReject }: ContentQueueItem
               </DialogHeader>
               <div className="text-2xl gap-4 py-4">
                 <div className="font-serif">Section Title :</div>
-                <div className="overflow-scroll text-white text-xs items-center">
+                <div className="overflow-scroll  text-xs items-center">
                   {parsedQueue?.title}
                 </div>
               </div>
-              <hr className="h-px my-4 bg-gray-200 border-0" />
+              <hr className="h-px my-4 bg-background border-0" />
               <div className="text-lg gap-4 py-4">
                 <div className="font-serif">Section body :</div>
                 <div className="items-center">
@@ -116,7 +116,7 @@ const ContentQueueItem = ({ item, index, onApprove, onReject }: ContentQueueItem
         
         <Button className="m-0 p-0" onClick={() => onReject && onReject(index)}>
           <XIcon
-            className="cursor-pointer text-white rounded-sm bg-red-400"
+            className="cursor-pointer text-foreground rounded-sm bg-red-400"
             size={50} />
         </Button>
       </div>

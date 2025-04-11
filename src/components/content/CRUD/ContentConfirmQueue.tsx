@@ -67,26 +67,26 @@ const ContentConfirmQueue = () => {
   }
 
   return (
-    <div className="text-white">
-      <Link className="m-2 hover:underline text-white underline-offset-8" to={`/page/${id}`}>
+    <div className="mt-4">
+      <Link className=" hover:underline  underline-offset-8" to={`/page/${id}`}>
         &lt; Back
       </Link>
 
-      <div className="text-neutral-500 justify-between my-8">
-        <div className="font-serif font-medium text-white text-4xl">
+      <div className=" justify-between mb-8">
+        <div className="font-serif font-medium  text-4xl">
           {page?.title}
         </div>
 
         <div className="flex space-x-4 mb-6">
           <Button
-            className={`${showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
+            className={`${showContentQueue ? 'underline underline-offset-4 ' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
             onClick={() => setShowContentQueue(true)}
           >
             Content queue
           </Button>
           {isLoggedIn?(
           <Button
-            className={`${!showContentQueue ? 'underline underline-offset-4 text-white' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
+            className={`${!showContentQueue ? 'underline underline-offset-4 ' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
             onClick={() => setShowContentQueue(false)}
           >
             Content History

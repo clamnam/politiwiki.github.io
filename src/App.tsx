@@ -27,7 +27,7 @@ export default function App() {
     <AuthProvider>
         <Router>
           <Navbar />
-          <div className=' flex  justify-center min-h-screen min-w-screen  py-10 bg-zinc-950'>
+          <div className=' flex bg-background text-foreground justify-center min-h-screen min-w-screen  pt-20'>
 
           <div className=' md:w-3/4 w-7/8 top-0 show-navflex  '>
           <Routes>

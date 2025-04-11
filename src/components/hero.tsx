@@ -17,7 +17,7 @@ export default function Hero() {
     }, []);
 
     return (
-        <div className="container-fluid text-white h-screen">
+        <div className="container-fluid  h-screen">
             <div className="flex text-center flex-col my-20 min-h-screen items-center">
                 <div className="text-6xl ">
                     Welcome to {import.meta.env.VITE_PROJECT_NAME}

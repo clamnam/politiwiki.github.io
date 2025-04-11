@@ -85,7 +85,7 @@ const ContentCreate = () => {
   return (
     <>
       <div className=" p-6 md:p-10">
-        <Card className="p-6 w-full max-w-sm text-white ">
+        <Card className="p-6 w-full max-w-sm  ">
         <div className="text-2xl font-serif">Create Content </div>
           <Form {...form}>
             <form 

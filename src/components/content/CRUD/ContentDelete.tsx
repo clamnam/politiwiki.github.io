@@ -26,7 +26,7 @@ const ContentDelete = ({ id, content, onDelete }: ContentDeleteProps) => {
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant="ghost" className="  p-0 hover:text-red-500">
-                    <DeleteIcon size={50} />
+                    <DeleteIcon  className="text-4xl"/>
                 </Button>
             </DialogTrigger>
 

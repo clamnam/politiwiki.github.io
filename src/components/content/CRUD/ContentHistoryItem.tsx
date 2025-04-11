@@ -25,7 +25,7 @@ const ContentHistoryItem = ({ item, index }: ContentHistoryItemProps) => {
   }
 
   return (
-    <div className="text-white" key={index}>
+    <div className="" key={index}>
       <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
       <div className="flex justify-between m-4">
         <div>
