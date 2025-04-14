@@ -77,6 +77,7 @@ const ContentCreate = () => {
       navigate(`/page/${data.page}`); // Redirect to the page view after successful creation
     } catch (error) {
       console.error("Error submitting form:", error);
+      console.log(values);
       // Handle error - show error message to user
     }
   }

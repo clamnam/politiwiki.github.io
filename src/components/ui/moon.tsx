@@ -25,7 +25,7 @@ const svgVariants: Variants = {
 };
 
 const svgTransition: Transition = {
-  duration: 1.2,
+  duration: 1,
   ease: 'easeInOut',
 };
 

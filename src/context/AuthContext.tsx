@@ -23,12 +23,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = (token: string) => {
     TokenService.tokenSave(token);
+    
     setIsLoggedIn(true);
   };
 
   const logout = () => {
     const token = TokenService.tokenRetrieval();
-    
+    localStorage.removeItem("username")
     if (token) {
       console.log("Logging out...", token);
       axios.post(

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import TokenService from "@/api/tokenService";
@@ -68,12 +68,12 @@ const ContentConfirmQueue = () => {
 
   return (
     <div className="mt-4">
-      <Link className=" hover:underline  underline-offset-8" to={`/page/${id}`}>
+      {/* <Link className=" hover:underline  underline-offset-8" to={`/page/${id}`}>
         &lt; Back
-      </Link>
+      </Link> */}
 
       <div className=" justify-between mb-8">
-        <div className="font-serif font-medium  text-4xl">
+        <div className="font-serif font-medium pnb text-4xl">
           {page?.title}
         </div>
 
@@ -82,7 +82,7 @@ const ContentConfirmQueue = () => {
             className={`${showContentQueue ? 'underline underline-offset-4 ' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
             onClick={() => setShowContentQueue(true)}
           >
-            Content queue
+            Content Queue
           </Button>
           {isLoggedIn?(
           <Button
@@ -93,12 +93,14 @@ const ContentConfirmQueue = () => {
           </Button>
           ):null}
         </div>
-
+          
         {showContentQueue  ? (
           <div>
             {content && Array.isArray(content) && content
+
               .filter(item => item.queue !== "[]")
               .map((item, index) => (
+                
                 <ContentQueueItem
                   key={index}
                   item={item}

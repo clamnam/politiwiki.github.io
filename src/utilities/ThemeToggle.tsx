@@ -25,11 +25,11 @@ export function ThemeToggle() {
     return (
         <button
             type="button"
-            className="rounded-md p-2 bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+            className="hover:bg-background/10 bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors p-4"
             onClick={() => setIsDark(!isDark)}
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
-            {isDark ? <SunIcon className=" p-0" size={25} /> :<MoonIcon className=" p-0" size={25} />}
+            {isDark ? <SunIcon title="Light Mode" className=" p-0" size={20} /> :<MoonIcon title="Dark Mode" className=" p-0" size={25} />}
         </button>
     );
 }

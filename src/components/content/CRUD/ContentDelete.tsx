@@ -30,7 +30,7 @@ const ContentDelete = ({ id, content, onDelete }: ContentDeleteProps) => {
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[425px] bg-neutral-800 text-white">
+            <DialogContent className="sm:max-w-[425px] bg-background text-foreground">
                 <DialogHeader>
                     <DialogTitle className="text-red-500 flex items-center ">DELETE CONTENT? <BadgeAlertIcon className="p-2" size={35} /></DialogTitle>
                     <DialogDescription>
@@ -39,7 +39,7 @@ const ContentDelete = ({ id, content, onDelete }: ContentDeleteProps) => {
                 </DialogHeader>
                 <div className="text-2xl gap-4 py-4">
                     <div className="font-serif">Section Title:</div>
-                    <div className="overflow-scroll text-white text-xs items-center">
+                    <div className="overflow-scroll  text-xs items-center">
                         {content?.title}
                     </div>
                 </div>

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useApi } from '../hooks/useApi';
 import { Button } from "@/components/ui/button"
 import { useAuth } from '@/context/AuthContext';
-import { Card } from '../ui/card';
 
 interface Page {
     id: string;
@@ -63,18 +62,17 @@ export default function PageList() {
 
     if (!hasPages) {
         return (
-            <Card className=' p-6 m-6'>
-                <div className='text-lg   text-serif'>Welcome to the your new wiki</div>
-                <div className="flex w-full items-center p-6">
-                    <Button
-                        variant="default"
-                        size="lg"
-                        className=" border border-red-500 hover:bg-red-500  rounded-lg px-6 py-3 transition-colors"
-                    >
-                        <Link to="/page/create">start by creating some pages create one?</Link>
-                    </Button>
-                </div>
-            </Card>
+            <div className="container-fluid  h-screen">
+            <div className="flex text-center flex-col my-20 min-h-screen items-center"><div className='text-6xl text-serif'>Welcome to the your new wiki</div>
+                {isLoggedIn?<Button
+                    variant="default"
+                    size="lg"
+                    className="m-40 text-4xl underline  hover:underline-offset-8 ease-in-out ease rounded-lg p-6 transition-colors"
+                >
+                    <Link to="/page/create">Start Creating!</Link>
+                </Button>:<Link className='underline hover:no-underline m-6' to={"/login"}>Login to start creating</Link>   }
+            </div>
+            </div>
         );
     }
 

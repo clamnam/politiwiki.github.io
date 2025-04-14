@@ -54,7 +54,6 @@ const PageCreate = () => {
     },
   })
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     const token = TokenService.tokenRetrieval();
 
     axios.post(
@@ -85,7 +84,7 @@ const PageCreate = () => {
 
   const Dropdown = () => {
     return (
-      <SelectContent className="bg-gray-400">
+      <SelectContent className="bg-secondary-background">
         {Array.from(page_types).map(([key, value]) => (
           <SelectItem key={key} value={String(key)}>
             {value}
@@ -100,9 +99,9 @@ const PageCreate = () => {
     <>
 
       {/* {diff} */}
-      <div className="p-6 md:p-10 text-white">
+      <div className="p-6 items-center text-foreground">
         <Card className="p-6 w-full max-w-sm ">
-        <div className="text-2xl text-white font-serif">Create a Page </div>
+        <div className="text-2xl text-foreground font-serif">Create a Page </div>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -131,7 +130,7 @@ const PageCreate = () => {
                           <SelectValue placeholder="Select a party" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent className="bg-white">
+                      <SelectContent className="bg-black">
                         <Dropdown />
                       </SelectContent>
                     </Select>

@@ -2,7 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
+
+import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from '@/context/AuthContext';
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
@@ -55,6 +56,8 @@ export default function Register() {
                     if (response.status === 200) {
                         // Use the login function from context instead of directly using TokenService
                         login(response.data.token);
+                        localStorage.setItem("username",response.data.username)
+
                         setStatus("Register successful");
                         // Redirect to pages after successful registration
                         navigate("/pages");
@@ -125,6 +128,7 @@ export default function Register() {
                         <Button className="" variant="submit" type="submit">
                             Submit
                         </Button>
+                        <Link className='underline hover:no-underline m-6' to={"/login"}>Already have an account?</Link>
                     </form>
                 </Form>
             </Card>

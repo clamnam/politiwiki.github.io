@@ -17,6 +17,7 @@ export const useContentData = (id: string | undefined) => {
                 // Fetch page data
                 const pageUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}${id}`;
                 const pageResponse = await axios.get(pageUrl);
+                console.log(pageResponse);
                 setPage(pageResponse.data);
 
                 // Fetch content data

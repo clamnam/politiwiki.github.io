@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input"
 import { Card } from "./ui/card"
 import { useState } from "react"
 // import TokenService from "@/api/tokenService"
-import {  useNavigate } from "react-router-dom"
+import {  Link, useNavigate } from "react-router-dom"
 
 
 export default function Login() {
@@ -49,6 +49,7 @@ export default function Login() {
                 console.log(response);
                 if (response.status === 200) {
                     login(response.data.token); // Use the context function instead
+                    localStorage.setItem("username",response.data.username)
                     setStatus("Login successful");
                     navigate("/pages");
                 } if (response.status === 401) {
@@ -99,6 +100,7 @@ export default function Login() {
                         )}
                         />
                         <Button className="" variant="submit" type="submit">Log in</Button>
+                        <Link className='underline hover:no-underline m-6' to={"/register"}>Dont have an account?</Link>
                     </form>
                 </Form>            
 
