@@ -13,6 +13,7 @@ import { QueueFormData } from "../../../types";
 
 const formSchema = z.object({
   queue_index: z.number().int().min(0),
+  approval:z.boolean()
 });
 
 const ContentConfirmQueue = () => {
@@ -22,17 +23,19 @@ const ContentConfirmQueue = () => {
   const { page, content, isLoading, error } = useContentData(id);
   const auth = TokenService.tokenRetrieval();
   const isLoggedIn = auth !== null;
-
+// imported type
   const form = useForm<QueueFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       queue_index: -1,
+      approval: undefined
     },
   });
 
-  async function onSubmit(values: QueueFormData): Promise<void> {
+  async function onSubmitApproval(values: QueueFormData): Promise<void> {
     const token = TokenService.tokenRetrieval();
-    const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/${id}`;
+    const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/approve/${id}`;
+    console.log(url);
 
     try {
       const response = await axios.patch(
@@ -54,8 +57,15 @@ const ContentConfirmQueue = () => {
 
   const handleApprove = (index: number) => {
     form.setValue('queue_index', 0);
-    form.handleSubmit(onSubmit)();
+    form.setValue('approval',true);
+    form.handleSubmit(onSubmitApproval)();
     console.log("Approve clicked for index:", index);
+  };
+  const handleReject = (index: number) => {
+    form.setValue('queue_index', 0);
+    form.setValue('approval',false);
+    form.handleSubmit(onSubmitApproval)();
+    console.log("Reject clicked for index:", index);
   };
 
   if (isLoading) {
@@ -79,14 +89,14 @@ const ContentConfirmQueue = () => {
 
         <div className="flex space-x-4 mb-6">
           <Button
-            className={`${showContentQueue ? 'underline underline-offset-4 ' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
+            className={`${showContentQueue ? 'underline underline-offset-4 ' : ''} hover:underline font-sans shadow-none hover:underline-offset-4 text-lg`}
             onClick={() => setShowContentQueue(true)}
           >
             Content Queue
           </Button>
           {isLoggedIn?(
           <Button
-            className={`${!showContentQueue ? 'underline underline-offset-4 ' : ''} hover:underline font-sans hover:underline-offset-4 text-lg`}
+            className={`${!showContentQueue ? 'underline underline-offset-4 ' : ''} hover:underline font-sans shadow-none hover:underline-offset-4 text-lg`}
             onClick={() => setShowContentQueue(false)}
           >
             Content History
@@ -106,6 +116,7 @@ const ContentConfirmQueue = () => {
                   item={item}
                   index={index}
                   onApprove={handleApprove}
+                  onReject={handleReject}
                 />
               ))}
           </div>

@@ -36,7 +36,7 @@ import { useState } from "react"
 
 export default function Register() {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, isLoggedIn } = useAuth();
     const [status, setStatus] = useState<string | null>(null);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -56,11 +56,14 @@ export default function Register() {
                     if (response.status === 200) {
                         // Use the login function from context instead of directly using TokenService
                         login(response.data.token);
-                        localStorage.setItem("username",response.data.username)
+                        localStorage.setItem("username", response.data.username)
 
                         setStatus("Register successful");
                         // Redirect to pages after successful registration
                         navigate("/pages");
+
+                        window.location.reload()
+
                     } if (response.status === 401) {
                         setStatus("Register failed");
                     }
@@ -69,7 +72,9 @@ export default function Register() {
             console.error(error)
         }
     }
-    
+    if (isLoggedIn) {
+        return <div className=""><>already logged in  </> <Link className="underline" to={"/"}>go to content?</Link></div>
+    }
     // Rest of your component remains the same
     return (
         <div className="flex min-h-screen items-center justify-center text-foreground p-6">
@@ -125,6 +130,8 @@ export default function Register() {
                                 </FormItem>
                             )}
                         />
+                        <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}</div> : <>&nbsp;</>}</div>
+
                         <Button className="" variant="submit" type="submit">
                             Submit
                         </Button>

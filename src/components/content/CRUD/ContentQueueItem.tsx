@@ -23,8 +23,7 @@ interface ContentQueueItemProps {
 }
 
 const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemProps) => {
-  const [currentPage, setCurrentPage] = useState(0);
-  const ITEMS_PER_PAGE = 5;
+  const [open, setOpen] = useState(false);
   
   let queueItems = [];
   try {
@@ -38,60 +37,13 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
     return null;
   }
 
-  // Calculate pagination values
-  const totalPages = Math.ceil(queueItems.length / ITEMS_PER_PAGE);
-  const startIndex = currentPage * ITEMS_PER_PAGE;
-  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, queueItems.length);
-  const currentItems = queueItems.slice(startIndex, endIndex);
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
+  // Render all items at once
+  const currentItems = queueItems;
 
   return (
-    
-    <div className="">
-      
+    <div>
       <hr className="h-px my-4 border-0 bg-background" />
       <div className="m-4">
-        {/* Pagination controls */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between mb-4">
-            <div className="text-sm">
-              Showing {startIndex + 1}-{endIndex} of {queueItems.length} items
-            </div>
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                disabled={currentPage === 0}
-                onClick={() => handlePageChange(currentPage - 1)}
-              >
-                Previous
-              </Button>
-              {Array.from({ length: totalPages }).map((_, pageIndex) => (
-                <Button
-                  key={pageIndex}
-                  variant={currentPage === pageIndex ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handlePageChange(pageIndex)}
-                >
-                  {pageIndex + 1}
-                </Button>
-              ))}
-              <Button 
-                variant="outline" 
-                size="sm"
-                disabled={currentPage >= totalPages - 1}
-                onClick={() => handlePageChange(currentPage + 1)}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
-        )}
-        
-        {/* Display current page items */}
         {currentItems.map((queueItem, queueIndex) => (
           <div key={queueIndex} className="mb-8 pb-4 border-b border-gray-200">
             {queueItem?.status === "Pending" && queueItem?.is_deleted === false && !item.updated_at ? (
@@ -112,16 +64,17 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
             </div>
             
             <div className="flex gap-2 mt-2">
-              <Dialog>
+              <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" className="">
+                  <Button variant="ghost">
                     <CheckCheckIcon
                       className="cursor-pointer rounded-sm bg-green-400"
-                      size={20} />
+                      size={20}
+                    />
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="min-w-10/12 sm:max-w-[425px] bg-background text-foreground">
-                  <div className="">
+                  <div>
                     <DialogHeader>
                       <DialogTitle>APPROVE CONTENT?</DialogTitle>
                       <DialogDescription>
@@ -152,7 +105,7 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
                     <DialogFooter>
                       <Button
                         variant="submit"
-                        onClick={() => onApprove(index, startIndex + queueIndex)}
+                        onClick={() => { setOpen(false); onApprove(index, queueIndex); }} 
                         type="submit"
                       >
                         {item?.status === "Pending" ? (
@@ -166,10 +119,11 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
                 </DialogContent>
               </Dialog>
               
-              <Button variant="ghost" className="m-0 p-0" onClick={() => onReject && onReject(index, startIndex + queueIndex)}>
+              <Button variant="ghost" className="m-0 p-0" onClick={() => onReject && onReject(index, queueIndex)}>
                 <XIcon
                   className="cursor-pointer text-foreground rounded-sm bg-red-400"
-                  size={20} />
+                  size={20}
+                />
               </Button>
             </div>
           </div>

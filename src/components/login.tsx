@@ -31,7 +31,7 @@ import {  Link, useNavigate } from "react-router-dom"
 
 export default function Login() {
     const navigate = useNavigate(); // Initialize the navigate function
-    const { login } = useAuth();
+    const { login,isLoggedIn } = useAuth();
     const [status, setStatus] = useState<string | null>(null);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -44,32 +44,37 @@ export default function Login() {
 
     async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
         try {
-            axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_LOGIN_ENDPOINT}`, values)
-            .then(function (response) {
-                console.log(response);
-                if (response.status === 200) {
-                    login(response.data.token); // Use the context function instead
-                    localStorage.setItem("username",response.data.username)
-                    setStatus("Login successful");
-                    navigate("/pages");
-                } if (response.status === 401) {
-                    setStatus("Login failed");
-                }
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_LOGIN_ENDPOINT}`, values);
+            console.log(response);
+            if (response.status === 200) {
+                login(response.data.token); // Use the context function instead
+                localStorage.setItem("username",response.data.username)
+                setStatus("Login successful");
+                navigate("/pages");
 
-            });
+                window.location.reload();
+
+            } if (response.status === 401) {
+                setStatus("Login failed");
+            }
         } catch (error) {
-            console.error(error)
+            setStatus("Login failed");
+            console.error(error);
         }
     }
+    if(isLoggedIn){
+        return<div className=""><>already logged in  </> <Link className="underline" to={"/"}>go to content?</Link></div>
+    }
     return (
+        <>
         <div className="flex min-h-screen items-center justify-center text-foreground p-6">
+
             <div className="text-6xl m-4">LOGIN</div>
             <Card className="p-6 w-full max-w-sm border-foreground">
-                
+
                 <Form {...form}>
                     <div className="bg-green-400">
-                    {status}
-                </div>
+                    </div>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="my-2">
                             <FormField
@@ -86,8 +91,7 @@ export default function Login() {
                                         </FormItem>
 
                                     </>
-                                )}
-                            />
+                                )} />
                         </div>
                         <FormField control={form.control} name="password" render={({ field }) => (
                             <FormItem>
@@ -97,15 +101,15 @@ export default function Login() {
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
-                        )}
-                        />
+                        )} />
+                        <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}</div> : <>&nbsp;</>}</div>
                         <Button className="" variant="submit" type="submit">Log in</Button>
                         <Link className='underline hover:no-underline m-6' to={"/register"}>Dont have an account?</Link>
                     </form>
-                </Form>            
+                </Form>
 
-        </Card>
-        </div>
+            </Card>
+        </div></>
     );
 };
 

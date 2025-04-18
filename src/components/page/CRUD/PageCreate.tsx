@@ -86,7 +86,7 @@ const PageCreate = () => {
     return (
       <SelectContent className="bg-secondary-background">
         {Array.from(page_types).map(([key, value]) => (
-          <SelectItem key={key} value={String(key)}>
+          <SelectItem className="bg-secondary" key={key} value={String(key)}>
             {value}
           </SelectItem>
         ))}
@@ -101,7 +101,7 @@ const PageCreate = () => {
       {/* {diff} */}
       <div className="p-6 items-center text-foreground">
         <Card className="p-6 w-full max-w-sm ">
-        <div className="text-2xl text-foreground font-serif">Create a Page </div>
+        <div className="text-2xl  font-serif">Create a Page </div>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -130,7 +130,7 @@ const PageCreate = () => {
                           <SelectValue placeholder="Select a party" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent className="bg-black">
+                      <SelectContent className="">
                         <Dropdown />
                       </SelectContent>
                     </Select>

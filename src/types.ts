@@ -18,4 +18,5 @@ export interface Page {
 
 export interface QueueFormData {
   queue_index: number;
+  approval: boolean;
 }

@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { ThemeToggle } from '../utilities/ThemeToggle';
 import { ChevronDownIcon } from './ui/chevron-down';
-
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,12 +12,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-// import '../assets/app.css'
+
+// Create and render the chart once the component mounts
 
 const Navbar = () => {
     const [isNavHidden, setIsNavHidden] = useState(false);
-    const { isLoggedIn, logout } = useAuth();
+    const { isLoggedIn, logout,role } = useAuth();
     const [username, setUsername] = useState<string>();
+    const [open, setOpen] = useState(false)
 
 
 
@@ -46,9 +47,9 @@ const Navbar = () => {
 
     const Login = () => {
         return (
-            <><DropdownMenuItem className="hover:bg-foreground/10 hover:underline underline-offset-8">
+            <><DropdownMenuItem onClick={() => setOpen(false)} className="hover:bg-foreground/10 hover:underline underline-offset-8">
                 <Link to="/login" className=" m-2">Login</Link>
-            </DropdownMenuItem><DropdownMenuItem className="hover:bg-foreground/10 hover:underline underline-offset-8">
+            </DropdownMenuItem><DropdownMenuItem onClick={() => setOpen(false)} className="hover:bg-foreground/10 hover:underline underline-offset-8">
                     <Link to="/register" className=" m-2">Register</Link>
 
                 </DropdownMenuItem></>
@@ -57,40 +58,40 @@ const Navbar = () => {
 
     const LogOut = () => {
         return (
-                <DropdownMenuItem className="hover:bg-foreground/10 hover:underline underline-offset-8">
-                    
-                    <Link to={window.location.pathname}>
-                        <div onClick={logout} className="  m-2  ">Log Out</div>
-                    </Link>
-                </DropdownMenuItem>
+            <DropdownMenuItem  className="hover:bg-foreground/10 hover:underline underline-offset-8">
+
+                <Link to={window.location.pathname}>
+                    <div onClick={() => { logout(); window.location.reload(); }} className="  m-2  ">Log Out</div>
+                </Link>
+            </DropdownMenuItem>
         );
     }
 
     return (
-            <div className={` text-background bg-foreground min-w-full fixed text-lg top-0 ${isNavHidden ? 'hide-nav' : 'show-nav'}`}>
-                <div className="dropdown flex justify-between items-center w-full">
-                    <ul className="flex">
-                        <li className="m-2 hover:underline  underline-offset-8">
-                            <Link to="/" className="">Home</Link>
-                        </li>
-                        <li className="m-2 hover:underline underline-offset-8">
-                            <Link to="/pages" className="">Pages</Link>
-                        </li>
-                    </ul>
-                    <div className="flex items-center ">
-                        <ThemeToggle />
+        <div className={` text-background bg-foreground min-w-full fixed text-lg top-0 ${isNavHidden ? 'hide-nav' : 'show-nav'}`}>
+            <div className="dropdown flex justify-between items-center w-full">
+                <ul className="flex">
+                    <li className="m-2 hover:underline  underline-offset-8">
+                        <Link to="/" className="">Home</Link>
+                    </li>
+                    <li className="m-2 hover:underline underline-offset-8">
+                        <Link to="/pages" className="">Pages</Link>
+                    </li>
+                </ul>
+                <div className="flex items-center ">
+                    <ThemeToggle />
 
-                        <div className="">
-                            <DropdownMenu >
-                                <DropdownMenuTrigger className=" p-3 flex hover:cursor-pointer bg-foreground text-background hover:bg-background/10 "> {username?username:<>Acccount</>}<ChevronDownIcon  className='p-0 pr-2'/></DropdownMenuTrigger>
-                                <DropdownMenuContent className='bg-background'>
-                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    {isLoggedIn ? <LogOut /> : <Login />}
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
+                    <div className="">
+                        <DropdownMenu open={open} onOpenChange={setOpen}>
+                            <DropdownMenuTrigger  className=" p-3 flex hover:cursor-pointer bg-foreground text-background hover:bg-background/10 "> {username ? <>{username} {role}</>: <>Acccount</>}<ChevronDownIcon className='p-0 pr-2' /></DropdownMenuTrigger>
+                            <DropdownMenuContent className='bg-background'>
+                                <DropdownMenuLabel className='hover:bg-foreground/10 hover:underline underline-offset-8'><Link to='/profile'>My Account</Link></DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                {isLoggedIn ? <LogOut /> : <Login />}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
+                </div>
             </div>
         </div>
     );

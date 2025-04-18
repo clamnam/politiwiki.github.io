@@ -20,6 +20,7 @@ import ContentCreate from './components/content/CRUD/ContentCreate.tsx';
 import Register from './components/register.tsx';
 import ContentEdit from './components/content/CRUD/ContentEdit.tsx';
 import { AuthProvider } from './context/AuthContext';
+import Profile from './components/profile/profile.tsx';
 
 export default function App() {
   return (
@@ -53,6 +54,8 @@ export default function App() {
 
               {/* <Route path="/content/edit"element={<ContentEdit/>}></Route> */}
             </Route>
+            <Route path="/profile" element={<Profile />} />
+
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
