@@ -50,26 +50,21 @@ export default function Register() {
 
     async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
         try {
-            axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_REGISTER_ENDPOINT}`, values)
-                .then(function (response) {
-                    console.log(response);
-                    if (response.status === 200) {
-                        // Use the login function from context instead of directly using TokenService
-                        login(response.data.token);
-                        localStorage.setItem("username", response.data.username)
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_REGISTER_ENDPOINT}`, values);
+            console.log(response);
+            login(response.data.token);
+            localStorage.setItem("username", response.data.username)
 
-                        setStatus("Register successful");
-                        // Redirect to pages after successful registration
-                        navigate("/pages");
+            setStatus("Register successful");
+            // Redirect to pages after successful registration
+            navigate("/pages");
 
-                        window.location.reload()
+            window.location.reload()
 
-                    } if (response.status === 401) {
-                        setStatus("Register failed");
-                    }
-                });
-        } catch (error) {
+            }catch (error) {
             console.error(error)
+            setStatus("Register failed.");
+
         }
     }
     if (isLoggedIn) {
@@ -80,9 +75,7 @@ export default function Register() {
         <div className="flex min-h-screen items-center justify-center text-foreground p-6">
             <div className="text-6xl m-4">REGISTER</div>
             <Card className="p-6 w-full max-w-sm border-foreground ">
-                <div className="bg-green-400">
-                    {status}
-                </div>
+                
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <FormField
@@ -130,7 +123,7 @@ export default function Register() {
                                 </FormItem>
                             )}
                         />
-                        <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}</div> : <>&nbsp;</>}</div>
+                        <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}. <Link className="hover:underline" to='/login'>Already have an account?</Link></div> : <>&nbsp;</>}</div>
 
                         <Button className="" variant="submit" type="submit">
                             Submit

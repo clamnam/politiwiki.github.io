@@ -54,8 +54,6 @@ export default function Login() {
 
                 window.location.reload();
 
-            } if (response.status === 401) {
-                setStatus("Login failed");
             }
         } catch (error) {
             setStatus("Login failed");
@@ -102,7 +100,7 @@ export default function Login() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}</div> : <>&nbsp;</>}</div>
+                        <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}. <Link className="hover:underline" to='/register'>Create an Account here</Link></div> : <>&nbsp;</>}</div>
                         <Button className="" variant="submit" type="submit">Log in</Button>
                         <Link className='underline hover:no-underline m-6' to={"/register"}>Dont have an account?</Link>
                     </form>

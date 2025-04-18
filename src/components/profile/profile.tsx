@@ -1,5 +1,7 @@
 import AdminScreen from "./adminScreen";
+
 export default function Profile () {
+    
     return (
         <div style={{ maxWidth: '600px', margin: '0 auto', padding: '2rem', fontFamily: 'Arial, sans-serif' }}>
             <div style={{ textAlign: 'center' }}>

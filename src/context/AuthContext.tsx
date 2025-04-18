@@ -72,7 +72,6 @@ function findRole(): Promise<number> {
       Authorization: `Bearer ${token}`
     }
   }).then(response => {
-    console.log("API response data:", response.data); // Debug the API response
     // Ensure we're getting a number by using parseFloat
     return parseFloat(response.data.title);
   })

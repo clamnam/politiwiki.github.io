@@ -28,7 +28,6 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
   let queueItems = [];
   try {
     queueItems = JSON.parse(item.queue);
-    console.log(queueItems);
     if (!Array.isArray(queueItems) || queueItems.length === 0) {
       return null;
     }

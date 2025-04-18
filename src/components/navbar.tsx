@@ -17,7 +17,7 @@ import {
 
 const Navbar = () => {
     const [isNavHidden, setIsNavHidden] = useState(false);
-    const { isLoggedIn, logout,role } = useAuth();
+    const { isLoggedIn, logout } = useAuth();
     const [username, setUsername] = useState<string>();
     const [open, setOpen] = useState(false)
 
@@ -58,12 +58,15 @@ const Navbar = () => {
 
     const LogOut = () => {
         return (
-            <DropdownMenuItem  className="hover:bg-foreground/10 hover:underline underline-offset-8">
 
-                <Link to={window.location.pathname}>
-                    <div onClick={() => { logout(); window.location.reload(); }} className="  m-2  ">Log Out</div>
-                </Link>
+            <DropdownMenuItem  className="hover:bg-foreground/10 hover:underline underline-offset-8">
+                <Link className='m-2' to={window.location.pathname}>
+
+                    <div onClick={() => { logout(); window.location.reload(); }} className="  ">Log Out</div>
+                    </Link>
+
             </DropdownMenuItem>
+
         );
     }
 
@@ -83,7 +86,7 @@ const Navbar = () => {
 
                     <div className="">
                         <DropdownMenu open={open} onOpenChange={setOpen}>
-                            <DropdownMenuTrigger  className=" p-3 flex hover:cursor-pointer bg-foreground text-background hover:bg-background/10 "> {username ? <>{username} {role}</>: <>Acccount</>}<ChevronDownIcon className='p-0 pr-2' /></DropdownMenuTrigger>
+                            <DropdownMenuTrigger  className=" p-3 flex hover:cursor-pointer bg-foreground text-background hover:bg-background/10 "> {username ? <>{username}</>: <>Acccount</>}<ChevronDownIcon className='p-0 pr-2' /></DropdownMenuTrigger>
                             <DropdownMenuContent className='bg-background'>
                                 <DropdownMenuLabel className='hover:bg-foreground/10 hover:underline underline-offset-8'><Link to='/profile'>My Account</Link></DropdownMenuLabel>
                                 <DropdownMenuSeparator />
