@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@radix-ui/react-label';
 import axios from 'axios';
-import TokenService from '@/api/tokenService';
+import UserService from '@/api/userService';
 
 const formSchema = z.object({
   title: z.string().min(1).max(100),
@@ -18,7 +18,8 @@ const formSchema = z.object({
 });
 
 export default function ContentEdit() {
-  const token = TokenService.tokenRetrieval();
+  const userdata = UserService.userRetrieval();
+  const token = userdata.token;
   const navigate = useNavigate();
   const location = useLocation();
   const data = location.state;

@@ -27,7 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import TokenService from "@/api/tokenService";
+import UserService from "@/api/userService";
 import { Card } from "@/components/ui/card"
 import { useNavigate } from "react-router-dom"
 import {
@@ -54,8 +54,8 @@ const PageCreate = () => {
     },
   })
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const token = TokenService.tokenRetrieval();
-
+    const data = UserService.userRetrieval();
+    const token = data.token;
     axios.post(
       `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}`,
       values,

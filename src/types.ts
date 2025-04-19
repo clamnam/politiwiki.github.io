@@ -20,3 +20,11 @@ export interface QueueFormData {
   queue_index: number;
   approval: boolean;
 }
+export interface UserData{
+  id: number,
+  email: string,
+  token:string,
+  username:  string,
+  role_id: number,
+  created_at:number
+}

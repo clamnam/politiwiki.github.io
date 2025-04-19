@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert"
 
 import ContentConfirmButton from "../content/CRUD/ContentQueueButton";
-import TokenService from "@/api/tokenService";
+import UserService from "@/api/userService";
 import { z } from "zod";
 // import ContentConfirmButton from "../content/CRUD/ContentConfirmButton";
 
@@ -40,7 +40,8 @@ const Page = () => {
 
 
     const handleDelete = async (id: number) => {
-        const token = TokenService.tokenRetrieval();
+        const data = UserService.userRetrieval();
+        const token = data.token;
         const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/queue/${id}`;
 
         try {
