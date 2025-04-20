@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import axios from "axios"
 import { useAuth } from '@/context/AuthContext';
-
+import { UserData } from "@/types";
 const formSchema = z.object({
     username: z.string().min(1)
         .max(30, { message: "Username must be less than 30 characters." }),
@@ -25,13 +25,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Card } from "./ui/card"
 import { useState } from "react"
-// import TokenService from "@/api/tokenService"
-import {  Link, useNavigate } from "react-router-dom"
+// import UserService from "@/api/UserService"
+import { Link, useNavigate } from "react-router-dom"
 
 
 export default function Login() {
     const navigate = useNavigate(); // Initialize the navigate function
-    const { login,isLoggedIn } = useAuth();
+    const { login, isLoggedIn } = useAuth();
     const [status, setStatus] = useState<string | null>(null);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -45,10 +45,19 @@ export default function Login() {
     async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_LOGIN_ENDPOINT}`, values);
-            console.log(response);
+            console.log(response)
+            const userdata: UserData = {
+                id: response.data.id,
+                email: response.data.email,
+                username: response.data.username,
+                token: response.data.token,
+                role_id: response.data.role_id,
+                created_at: response.data.created_at
+            }
+            console.log(userdata);
             if (response.status === 200) {
-                login(response.data.token); // Use the context function instead
-                localStorage.setItem("username",response.data.username)
+                login(userdata); // Use the context function instead
+                localStorage.setItem("username", response.data.username)
                 setStatus("Login successful");
                 navigate("/pages");
 
@@ -60,54 +69,54 @@ export default function Login() {
             console.error(error);
         }
     }
-    if(isLoggedIn){
-        return<div className=""><>already logged in  </> <Link className="underline" to={"/"}>go to content?</Link></div>
+    if (isLoggedIn) {
+        return <div className=""><>already logged in  </> <Link className="underline" to={"/"}>go to content?</Link></div>
     }
     return (
         <>
-        <div className="flex min-h-screen items-center justify-center text-foreground p-6">
+            <div className="flex min-h-screen items-center justify-center text-foreground p-6">
 
-            <div className="text-6xl m-4">LOGIN</div>
-            <Card className="p-6 w-full max-w-sm border-foreground">
+                <div className="text-6xl m-4">LOGIN</div>
+                <Card className="p-6 w-full max-w-sm border-foreground">
 
-                <Form {...form}>
-                    <div className="bg-green-400">
-                    </div>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className="my-2">
-                            <FormField
-                                control={form.control}
-                                name="username"
-                                render={({ field }) => (
-                                    <>
-                                        <FormItem>
-                                            <FormLabel>Username </FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Username" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-
-                                    </>
-                                )} />
+                    <Form {...form}>
+                        <div className="bg-green-400">
                         </div>
-                        <FormField control={form.control} name="password" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <Input type="password" placeholder="Password" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                        <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}. <Link className="hover:underline" to='/register'>Create an Account here</Link></div> : <>&nbsp;</>}</div>
-                        <Button className="" variant="submit" type="submit">Log in</Button>
-                        <Link className='underline hover:no-underline m-6' to={"/register"}>Dont have an account?</Link>
-                    </form>
-                </Form>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                            <div className="my-2">
+                                <FormField
+                                    control={form.control}
+                                    name="username"
+                                    render={({ field }) => (
+                                        <>
+                                            <FormItem>
+                                                <FormLabel>Username </FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Username" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
 
-            </Card>
-        </div></>
+                                        </>
+                                    )} />
+                            </div>
+                            <FormField control={form.control} name="password" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" placeholder="Password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                            <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}. <Link className="hover:underline" to='/register'>Create an Account here</Link></div> : <>&nbsp;</>}</div>
+                            <Button className="" variant="submit" type="submit">Log in</Button>
+                            <Link className='underline hover:no-underline m-6' to={"/register"}>Dont have an account?</Link>
+                        </form>
+                    </Form>
+
+                </Card>
+            </div></>
     );
 };
 

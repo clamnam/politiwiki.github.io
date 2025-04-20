@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import TokenService from "@/api/tokenService";
+import UserService from "@/api/userService";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,7 +21,7 @@ const ContentConfirmQueue = () => {
   const [showContentQueue, setShowContentQueue] = useState(true);
   const navigate = useNavigate();
   const { page, content, isLoading, error } = useContentData(id);
-  const auth = TokenService.tokenRetrieval();
+  const auth = UserService.userRetrieval();
   const isLoggedIn = auth !== null;
 // imported type
   const form = useForm<QueueFormData>({
@@ -33,7 +33,8 @@ const ContentConfirmQueue = () => {
   });
 
   async function onSubmitApproval(values: QueueFormData): Promise<void> {
-    const token = TokenService.tokenRetrieval();
+    const data = UserService.userRetrieval();
+    const token = data.token
     const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/approve/${id}`;
     console.log(url);
 

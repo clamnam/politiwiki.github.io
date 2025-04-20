@@ -28,10 +28,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import TokenService from "@/api/tokenService"
+import UserService from "@/api/userService"
 
 
-// import TokenService from "@/api/tokenService";
 
 const ContentCreate = () => {
   const navigate = useNavigate(); // Initialize the navigate function
@@ -61,7 +60,8 @@ const ContentCreate = () => {
     },
   })
   async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {    
-    const token = TokenService.tokenRetrieval();
+    const data = UserService.userRetrieval();
+    const token = data.token;
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}`, 

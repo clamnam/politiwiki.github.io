@@ -17,7 +17,6 @@ const chartConfig = {
 }
 export default function AdminScreen() {
     const { role } = useAuth();
-    console.log(role);
     const chartData = [{ month: "role", trust: role, remaining: 1 - role }]
 
     const totalTrust = chartData[0].trust *100

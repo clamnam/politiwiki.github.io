@@ -1,11 +1,11 @@
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import TokenService from '@/api/tokenService';
+import UserService from '@/api/userService';
 import axios from 'axios';
-
+import { UserData } from '@/types';
 interface AuthContextType {
-  role:number;
+  role: number;
   isLoggedIn: boolean;
-  login: (token: string) => void;
+  login: (data: UserData) => void;
   logout: () => void;
 }
 
@@ -17,10 +17,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check token on initial load
-    const token = TokenService.tokenRetrieval();
+    const token = UserService.userRetrieval();
     if (token) {
       setIsLoggedIn(true);
-      
+
       // Also fetch and set the role on page refresh
       findRole().then(roleValue => {
         setRole(roleValue);
@@ -28,20 +28,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const login = (token: string) => {
-    TokenService.tokenSave(token);
+  const login = (data: UserData) => {
+    // localStorage.setItem("token", token);
+
+    UserService.userSave(data);
     setIsLoggedIn(true);
-    
+
     findRole().then(roleValue => {
       setRole(roleValue);
     });
   };
 
   const logout = () => {
-    const token = TokenService.tokenRetrieval();
-    localStorage.removeItem("username")
+    const token = UserService.userRetrieval();
     if (token) {
-      console.log("Logging out...", token);
       axios.post(
         `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_LOGOUT_ENDPOINT}`,
         {}, // Empty body or you can pass any required body data here
@@ -51,22 +51,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
       ).catch(error => console.error("Logout error:", error));
-      TokenService.tokenDelete();
+      UserService.userDelete();
     }
 
     setIsLoggedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={{ role ,isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ role, isLoggedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 function findRole(): Promise<number> {
   const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_ROLE_ENDPOINT}`;
-  console.log(url);
-  const token = TokenService.tokenRetrieval();
+  const data = UserService.userRetrieval();
+  const token = data.token;
   return axios.get(url, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -75,10 +75,10 @@ function findRole(): Promise<number> {
     // Ensure we're getting a number by using parseFloat
     return parseFloat(response.data.title);
   })
-  .catch(error => {
-    console.error("Error fetching role:", error);
-    return 0;
-  });
+    .catch(error => {
+      console.error("Error fetching role:", error);
+      return 0;
+    });
 }
 export function useAuth() {
   const context = useContext(AuthContext);

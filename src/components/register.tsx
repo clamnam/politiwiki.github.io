@@ -5,6 +5,7 @@ import axios from "axios"
 
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from '@/context/AuthContext';
+import {UserData} from '../types'
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
 
@@ -52,7 +53,15 @@ export default function Register() {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_REGISTER_ENDPOINT}`, values);
             console.log(response);
-            login(response.data.token);
+            const userdata: UserData = {
+                id: response.data.id,
+                email: response.data.email,
+                username:  response.data.username,
+                token: response.data.token,
+                role_id: response.data.role_id,
+                created_at:response.data.create_at
+            }
+            login(userdata);
             localStorage.setItem("username", response.data.username)
 
             setStatus("Register successful");

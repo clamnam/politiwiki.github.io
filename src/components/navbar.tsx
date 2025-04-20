@@ -11,6 +11,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import UserService from '@/api/userService';
 
 
 // Create and render the chart once the component mounts
@@ -37,10 +38,9 @@ const Navbar = () => {
     };
 
     useEffect(() => {
-        const usernamestring = localStorage.getItem("username")
-
-        if (usernamestring) {
-            setUsername(usernamestring);
+        const data = UserService.userRetrieval();
+        if (data && data.username) {
+            setUsername(data.username);
         }
         NavReduce();
     }, [setUsername]);
