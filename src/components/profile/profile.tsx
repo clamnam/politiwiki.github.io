@@ -4,6 +4,7 @@ import AdminScreen from "./adminScreen";
 export default function Profile () {
     const data = UserService.userRetrieval();
     const date = new Date(data?.created_at);
+    console.log(data);
     return (
         <div className="flex flex-col items-center justify-center text-center" style={{ maxWidth: '600px', margin: '0 auto', padding: '2rem', fontFamily: 'Arial, sans-serif' }}>
             <div className="  " style={{ textAlign: 'center' }}>

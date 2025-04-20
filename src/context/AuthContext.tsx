@@ -42,7 +42,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     const token = UserService.userRetrieval();
     if (token) {
-      console.log("Logging out...", token);
       axios.post(
         `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_LOGOUT_ENDPOINT}`,
         {}, // Empty body or you can pass any required body data here

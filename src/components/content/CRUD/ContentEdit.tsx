@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@radix-ui/react-label';
 import axios from 'axios';
 import UserService from '@/api/userService';
+import { Input } from '@/components/ui/input';
 
 const formSchema = z.object({
   title: z.string().min(1).max(100),
@@ -35,7 +36,7 @@ export default function ContentEdit() {
           Authorization: `Bearer ${token}`,
         },
       });
-      navigate('/page/' + data_content?.page_id );
+      navigate('/page/' + data_content?.page_id);
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -63,12 +64,7 @@ export default function ContentEdit() {
 
   return (
     <div className="p-4 space-y-8 ">
-      <ReactDiffViewer 
-        oldValue={content_to_compare} 
-        newValue={diffValue} 
-        splitView={true} 
-        compareMethod={DiffMethod.WORDS_WITH_SPACE} 
-      />
+
       <form
         onSubmit={handleSubmit(
           onSubmit,
@@ -76,6 +72,20 @@ export default function ContentEdit() {
         )}
         className="space-y-6"
       >
+                <div className="flex flex-col">
+
+          <Label htmlFor="content_body" className="mb-1">
+            Title
+          </Label>
+            <Input
+              defaultValue={""}
+              id="title"
+              placeholder="Enter content here..."
+              {...register("title")}
+              className="p-2 border rounded w-full min-h-max"
+            />                    
+</div>
+
         <div className="flex flex-col">
           <Label htmlFor="content_body" className="mb-1">
             Content
@@ -92,6 +102,12 @@ export default function ContentEdit() {
               {errors.content_body.message}
             </span>
           )}
+                <ReactDiffViewer
+        oldValue={content_to_compare}
+        newValue={diffValue}
+        splitView={true}
+        compareMethod={DiffMethod.WORDS_WITH_SPACE}
+      />
         </div><Button
           variant="submit"
         >
