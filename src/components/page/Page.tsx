@@ -25,6 +25,7 @@ interface Page {
     title: string;
     content_body: string;
     queue: string;
+    order_id: number; // Added order_id field
 }
 
 
@@ -84,18 +85,18 @@ const Page = () => {
     }, [content, pending]);
 
     const rendercontent = (content: Page[]) => (
-        // console.log(content),
         <div>
-            {content.filter(item => item.status != "Pending")
+            {content
+                .filter(item => item.status != "Pending")
+                .sort((x, y) => (x.order_id || 0) - (y.order_id || 0)) // Sort by order_id ascending
                 .map((item, index) => {
-                    // console.log(item);
                     return (
                         <div key={index} className="break-words py-2">
                             <div className="flex space-between place-content-between">
                                 <div className="text-2xl py-2 font-serif">{item.title}</div>
 
                                 <div>
-                                    <div className="flex">
+                                    <div className="flex">{item.order_id}
                                         <Link state={{ content: item }} to={`/content/edit/${item.id}`} className="hover:text-green-500 p-.5">
                                             <SquarePenIcon size={30} />
                                         </Link>
