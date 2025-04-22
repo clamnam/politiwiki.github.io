@@ -1,7 +1,8 @@
-import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { createContext, useState, useContext, useEffect, ReactNode, forwardRef, ForwardedRef } from 'react';
 import UserService from '@/api/userService';
 import axios from 'axios';
 import { UserData } from '@/types';
+
 interface AuthContextType {
   role: number;
   isLoggedIn: boolean;
@@ -11,7 +12,11 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+// Convert AuthProvider to use forwardRef
+export const AuthProvider = forwardRef(function AuthProvider(
+  { children }: { children: ReactNode },
+  ref: ForwardedRef<HTMLDivElement>
+) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(0.0);
 
@@ -21,7 +26,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (token) {
       setIsLoggedIn(true);
 
-      // Also fetch and set the role on page refresh
       findRole().then(roleValue => {
         setRole(roleValue);
       });
@@ -29,8 +33,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = (data: UserData) => {
-    // localStorage.setItem("token", token);
-
     UserService.userSave(data);
     setIsLoggedIn(true);
 
@@ -59,10 +61,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ role, isLoggedIn, login, logout }}>
-      {children}
+      <div ref={ref}>
+        {children}
+      </div>
     </AuthContext.Provider>
   );
-}
+});
+
 function findRole(): Promise<number> {
   const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_ROLE_ENDPOINT}`;
   const data = UserService.userRetrieval();
@@ -80,6 +85,7 @@ function findRole(): Promise<number> {
       return 0;
     });
 }
+
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
