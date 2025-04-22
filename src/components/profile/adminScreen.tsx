@@ -64,6 +64,7 @@ export default function AdminScreen() {
                     </DrawerHeader>
                     <Card className="mx-auto px-4 mb-4 w-full max-w-sm">
                     <div>{status}</div>
+                    <div className="bg-red-500">Make sure you are aboslutely certain you want to add a category</div>
                     <FormProvider {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                             <FormField
