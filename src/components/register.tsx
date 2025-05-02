@@ -62,7 +62,6 @@ export default function Register() {
                 created_at:response.data.create_at
             }
             login(userdata);
-            localStorage.setItem("username", response.data.username)
 
             setStatus("Register successful");
             // Redirect to pages after successful registration
@@ -81,7 +80,7 @@ export default function Register() {
     }
     // Rest of your component remains the same
     return (
-        <div className="flex min-h-screen items-center justify-center text-foreground p-6">
+        <div className="no-flex sm:flex  min-h-screen items-center justify-center text-foreground p-6">
             <div className="text-6xl m-4">REGISTER</div>
             <Card className="p-6 w-full max-w-sm border-foreground ">
                 
@@ -133,11 +132,13 @@ export default function Register() {
                             )}
                         />
                         <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}. <Link className="hover:underline" to='/login'>Already have an account?</Link></div> : <>&nbsp;</>}</div>
+                        <div className="flex flex-col">
 
                         <Button className="" variant="submit" type="submit">
                             Submit
                         </Button>
                         <Link className='underline hover:no-underline m-6' to={"/login"}>Already have an account?</Link>
+                    </div>
                     </form>
                 </Form>
             </Card>

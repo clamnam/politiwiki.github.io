@@ -135,29 +135,32 @@ const PageCreate = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
-              <FormField
+                />
+                <FormField
                 control={form.control}
                 name="category"
                 render={({ field }) => (
                   <FormItem className="mt-8">
-                    <FormLabel>Page Type</FormLabel>
-                    <Select onValueChange={(value: string) => field.onChange(parseInt(value, 10))} defaultValue={String(field.value)}>
-                      <FormControl>
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select a party" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="">
-                        <Dropdown />
-                      </SelectContent>
-                    </Select>
+                  <FormLabel>Page Type</FormLabel>
+                  <Select  
+                    onValueChange={(value: string) => field.onChange(parseInt(value, 10))} 
+                    defaultValue={String(field.value)}
+                  >
+                    <FormControl>
+                      
+                    <SelectTrigger className=" text-foreground w-[180px]">
+                      <SelectValue placeholder="Select a page type" />
+                    </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="">
+                    <Dropdown />
+                    </SelectContent>
+                  </Select>
 
-                    <FormMessage />
+                  <FormMessage />
                   </FormItem>
                 )}
-              />
-
+                />
               <Button className="mt-8" variant="submit" type="submit">Submit</Button>
             </form>
           </Form>

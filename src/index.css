@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
@@ -77,8 +78,32 @@
     --shadow-shadow: var(--shadow);
     --font-weight-base: 500;
     --font-weight-heading: 700;
+    
+    /* Added font size variables */
+    --font-size-sm: 0.750rem;
+    --font-size-base: 1rem;
+    --font-size-xl: 1.333rem;
+    --font-size-2xl: 1.777rem;
+    --font-size-3xl: 2.369rem;
+    --font-size-4xl: 3.158rem;
+    --font-size-5xl: 4.210rem;
+    
+    /* Added font family variables */
+    --font-family-heading: 'Playfair Display';
+    --font-family-body: 'roboto';
+    
+    /* Added font weight variables */
+    --font-weight-normal: 400;
+    --font-weight-bold: 700;
 }
-
+@layer utilities {
+  .font-serif {
+    font-family: var(--font-family-heading);
+  }
+  .font-sans {
+    font-family: var(--font-family-body);
+  }
+}
 @layer base {
   * {
     @apply border-border outline-ring/50;

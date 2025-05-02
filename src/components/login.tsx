@@ -4,15 +4,8 @@ import { z } from "zod"
 import axios from "axios"
 import { useAuth } from '@/context/AuthContext';
 import { UserData } from "@/types";
-const formSchema = z.object({
-    username: z.string().min(1)
-        .max(30, { message: "Username must be less than 30 characters." }),
-    password: z.string()
-        .min(6, { message: "Password must be at least 6 characters." })
-        .max(30, { message: "Password must be less than 30 characters." }),
 
 
-})
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -27,6 +20,17 @@ import { Card } from "./ui/card"
 import { useState } from "react"
 // import UserService from "@/api/UserService"
 import { Link, useNavigate } from "react-router-dom"
+
+
+
+
+const formSchema = z.object({
+    username: z.string().min(1)
+        .max(30, { message: "Username must be less than 30 characters." }),
+    password: z.string()
+        .min(6, { message: "Password must be at least 6 characters." })
+        .max(30, { message: "Password must be less than 30 characters." }),
+})
 
 
 export default function Login() {
@@ -57,7 +61,6 @@ export default function Login() {
             console.log(userdata);
             if (response.status === 200) {
                 login(userdata); // Use the context function instead
-                localStorage.setItem("username", response.data.username)
                 setStatus("Login successful");
                 navigate("/pages");
 
@@ -74,7 +77,7 @@ export default function Login() {
     }
     return (
         <>
-            <div className="flex min-h-screen items-center justify-center text-foreground p-6">
+            <div className="no-flex sm:flex min-h-screen items-center justify-center text-foreground p-6">
 
                 <div className="text-6xl m-4">LOGIN</div>
                 <Card className="p-6 w-full max-w-sm border-foreground">
@@ -110,8 +113,10 @@ export default function Login() {
                                 </FormItem>
                             )} />
                             <div className=" my-1 px-1">{status ? <div className="bg-red-500 my-1 px-1">{status}. <Link className="hover:underline" to='/register'>Create an Account here</Link></div> : <>&nbsp;</>}</div>
+                            <div className="flex flex-col">
                             <Button className="" variant="submit" type="submit">Log in</Button>
                             <Link className='underline hover:no-underline m-6' to={"/register"}>Dont have an account?</Link>
+                            </div>
                         </form>
                     </Form>
 

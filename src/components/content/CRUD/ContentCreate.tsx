@@ -35,7 +35,7 @@ import { useEffect, useState } from "react";
 
 const ContentCreate = () => {
   const navigate = useNavigate(); // Initialize the navigate function
-  const [orderNum,setOrderNum] = useState(0);
+  const [orderNum, setOrderNum] = useState(0);
   const location = useLocation();
   const pageData = location.state;
   if (pageData?.page === undefined || isNaN(Number(pageData.page))) {
@@ -47,22 +47,22 @@ const ContentCreate = () => {
   // Add debugging
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/bypage/${pageIdNumber}`;
-            axios.get(apiUrl).then((response) => {
-              setOrderNum((response.data).length);
-          });
-        } catch (err) {
-            console.error(err);
-        }
-       
+      try {
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/bypage/${pageIdNumber}`;
+        axios.get(apiUrl).then((response) => {
+          setOrderNum((response.data).length);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+
     };
     if (pageIdNumber) fetchData();
 
-}, [pageIdNumber]);
+  }, [pageIdNumber]);
 
   // More explicit conversion
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,12 +73,12 @@ const ContentCreate = () => {
       page_id: pageIdNumber, // Use the explicitly converted number
     },
   })
-  async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {    
+  async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
     const data = UserService.userRetrieval();
     const token = data.token;
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}`, 
+        `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}`,
         values,
         {
           headers: {
@@ -101,13 +101,13 @@ const ContentCreate = () => {
     <>
       <div className=" p-6 md:p-10">
         <Card className="p-6 w-full max-w-sm  ">
-        <div className="text-2xl font-serif">Create Content </div>
+          <div className="text-2xl font-serif">Create Content </div>
           <Form {...form}>
-            <form 
+            <form
               onSubmit={form.handleSubmit(
-                onSubmit, 
+                onSubmit,
                 (errors) => console.error("Form validation errors:", errors)
-              )} 
+              )}
               className="space-y-4"
             >
               <FormField
@@ -123,9 +123,9 @@ const ContentCreate = () => {
                   </FormItem>
                 )}
               />
-              <FormField 
-                control={form.control} 
-                name="content_body" 
+              <FormField
+                control={form.control}
+                name="content_body"
                 render={({ field }) => (
                   <FormItem className="my-2">
                     <FormLabel>Content Body</FormLabel>
@@ -136,9 +136,9 @@ const ContentCreate = () => {
                   </FormItem>
                 )}
               />
-              <Button 
-                className="my-2" 
-                variant="submit" 
+              <Button
+                className="my-2"
+                variant="submit"
                 type="submit"
                 onClick={() => console.log("Button clicked")}
               >
