@@ -94,7 +94,9 @@ const Page = () => {
                 .map((item, index) => {
                     return (
                         <div key={index} className="break-words py-2">
-                            <div className="flex space-between place-content-between">
+                <hr className="mx-1 border-border" />
+               
+                <div className="flex space-between place-content-between">
                                 <div className="text-2xl py-2 font-serif">{item.title}</div>
                                 <div>
                                 {isLoggedIn ?
@@ -164,7 +166,6 @@ const Page = () => {
 
                     </div>
                 </div>
-                <hr className=" border-foreground" />
 
 
 
