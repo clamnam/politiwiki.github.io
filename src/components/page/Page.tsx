@@ -21,7 +21,7 @@ import { z } from "zod";
 
 interface Content {
     status: string;
-    id: string;
+    id: number;
     title: string;
     content_body: string;
     queue: string;
@@ -90,10 +90,11 @@ const Page = () => {
                 .filter(item => item.status != "Pending")
                 .filter(item => item.is_deleted != true)
 
-                .sort((x, y) => (x.order_id || 0) - (y.order_id || 0)) // Sort by order_id ascending
+                .sort((x, y) => (x.id || 0) - (y.id || 0)) // Sort by order_id ascending
                 .map((item, index) => {
                     return (
                         <div key={index} className="break-words py-2">
+                                                    {item.id}
                             <div className="flex space-between place-content-between">
                                 <div className="text-2xl py-2 font-serif">{item.title}</div>
                                 <div>
@@ -180,7 +181,7 @@ const Page = () => {
                     <Plus size={80} />
                 </div></Link>) : 
                 <><div className="text-lg">
-                <Link className=" flex my-8 hover:bg-stone-300 hover:dark:bg-stone-800 rounded-md hover:cursor-cell justify-center  sm:no-underline underline" to='/login'> Want to Contribute? Login</Link>
+                <Link className=" flex my-8 p-2 hover:bg-stone-300 bg-stone-400 hover:dark:bg-stone-800 rounded-md hover:cursor-cell justify-center  sm:no-underline underline" to='/login'> Want to Contribute? Login</Link>
             </div></>
                 }
 
