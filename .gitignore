@@ -10096,3 +10096,6 @@ src/styles/fonts/noto/static/NotoSans-SemiBold.ttf
 src/styles/fonts/noto/static/NotoSans-SemiBoldItalic.ttf
 src/styles/fonts/noto/static/NotoSans-Thin.ttf
 src/styles/fonts/noto/static/NotoSans-ThinItalic.ttf
+
+# Local Netlify folder
+.netlify
