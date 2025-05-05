@@ -20,7 +20,7 @@ export const useContentData = (id: string | undefined) => {
                 setPage(pageResponse.data);
 
                 // Fetch content data
-                const contentUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/bypage/${id}`;
+                const contentUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}bypage/${id}`;
                 const contentResponse = await axios.get(contentUrl);
                 setContent(contentResponse.data);
             } catch (err) {

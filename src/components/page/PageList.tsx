@@ -77,21 +77,7 @@ export default function PageList() {
         fetchData();
     }, [execute]);
 
-    if (!categories) {
-        return (
-            <div className="container-fluid  h-screen">
-                <div className="flex text-center flex-col my-20 min-h-screen items-center"><div className='text-6xl text-serif'>Welcome to the your new wiki</div>
-                    {isLoggedIn ? <Button
-                        variant="default"
-                        size="lg"
-                        className="m-40 text-4xl underline  hover:underline-offset-8 ease-in-out ease rounded-lg p-6 transition-colors"
-                    >
-                        <Link to="/page/create">Start Creating!</Link>
-                    </Button> : <Link className='underline hover:no-underline m-6' to={"/login"}>Login to start creating</Link>}
-                </div>
-            </div>
-        );
-    }
+
 
     return (
         <>
@@ -101,10 +87,10 @@ export default function PageList() {
 
                     {isLoggedIn ? <Button variant="primary" className="">
                         <Link className='flex' to="/page/create">create one?</Link>
-                    </Button> : null}
+                    </Button> : <Button variant="primary"><Link className='flex' to="/login">Start creating content, login?</Link></Button>}
                 </div>
                 <div className="mt-8 space-y-10">
-                    {categories.map((category) => (
+                    {categories?.map((category) => (
                         <div key={category.id} className="space-y-4">
                             <h2 className="text-2xl font-bold">{category.name}</h2>
                             {category.pages && category.pages.length > 0 ? (

@@ -13,7 +13,7 @@ import { Card } from '@/components/ui/card';
 
 const formSchema = z.object({
   title: z.string().min(1).max(100),
-  content_body: z.string().min(1).max(1000),
+  content_body: z.string().min(1).max(10000),
   order_id: z.number().int(),
   page_id: z.number().int(),
   created_by_id: z.number().int(),
@@ -31,7 +31,7 @@ export default function ContentEdit() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/queue/${id}`;
+      const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}queue/${id}`;
       const response = await axios.patch(url, values, {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -43,7 +43,7 @@ const Page = () => {
     const handleDelete = async (id: number) => {
         const data = UserService.userRetrieval();
         const token = data.token;
-        const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/queue/${id}`;
+        const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}queue/${id}`;
 
         try {
             const deleteSchema = z.object({
@@ -109,7 +109,14 @@ const Page = () => {
                                 </div>
 
                             </div>
-                            <div className="text-base ">{item.content_body}</div>
+                            <div className="text-base">
+                                {item.content_body.split('\n').map((line, index) => (
+                                    <span key={index}>
+                                        {line}
+                                        <br />
+                                    </span>
+                                ))}
+                            </div>
 
                         </div>
                     );
@@ -127,7 +134,7 @@ const Page = () => {
                 console.error(err);
             }
             try {
-                const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/bypage/${id}`;
+                const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}bypage/${id}`;
                 axios.get(apiUrl).then((response) => {
                     setContent(response.data);
                 });

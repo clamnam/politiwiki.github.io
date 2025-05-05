@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from "axios"
 const formSchema = z.object({
   title: z.string().min(1).max(100),
-  content_body: z.string().min(1).max(1000),
+  content_body: z.string().min(1).max(10000),
   content_type: z.number().int(),
   order_id: z.number().int(),
   page_id: z.number().int(),
@@ -48,7 +48,7 @@ const ContentCreate = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/bypage/${pageIdNumber}`;
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}bypage/${pageIdNumber}`;
         axios.get(apiUrl).then((response) => {
           setOrderNum((response.data).length);
         });
