@@ -94,7 +94,6 @@ const Page = () => {
                 .map((item, index) => {
                     return (
                         <div key={index} className="break-words py-2">
-                                                    {item.id}
                             <div className="flex space-between place-content-between">
                                 <div className="text-2xl py-2 font-serif">{item.title}</div>
                                 <div>
