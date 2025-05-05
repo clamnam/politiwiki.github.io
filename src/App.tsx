@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/home.tsx';
 import Login from './components/login.tsx';
 
@@ -50,6 +50,11 @@ export default function App() {
 
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+
+              <Route
+        path="*"
+        element={<Navigate to="/pages" replace />}
+    />
             </Routes>
           </div>
 
