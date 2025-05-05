@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { DeleteIcon } from "../../ui/delete";
 import { BadgeAlertIcon } from "lucide-react";
+import { useState } from "react";
 
 interface ContentDeleteProps {
     id: number;
@@ -22,11 +23,12 @@ interface ContentDeleteProps {
 }
 
 const ContentDelete = ({ id, content, onDelete }: ContentDeleteProps) => {
+  const [open, setOpen] = useState(false);
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" className="  p-0 hover:text-red-500">
-                    <DeleteIcon  className="text-4xl"/>
+                <Button variant="ghost" size="lg" className="  hover:text-red-500">
+                    <DeleteIcon  size={30} className="border-0"/>
                 </Button>
             </DialogTrigger>
 
@@ -39,7 +41,7 @@ const ContentDelete = ({ id, content, onDelete }: ContentDeleteProps) => {
                 </DialogHeader>
                 <div className="text-2xl gap-4 py-4">
                     <div className="font-serif">Section Title:</div>
-                    <div className="overflow-scroll  text-xs items-center">
+                    <div className="  text-xs items-center">
                         {content?.title}
                     </div>
                 </div>
@@ -51,7 +53,7 @@ const ContentDelete = ({ id, content, onDelete }: ContentDeleteProps) => {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={() => onDelete(Number(id))} variant="submit" type="submit">
+                    <Button onClick={() => {setOpen(false); onDelete(Number(id));}} variant="submit" type="submit">
                         Delete
                     </Button>
                 </DialogFooter>

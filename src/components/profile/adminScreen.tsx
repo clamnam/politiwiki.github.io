@@ -1,108 +1,95 @@
 import { Button } from "@/components/ui/button";
-import { Label, PolarRadiusAxis, RadialBar, RadialBarChart, ResponsiveContainer } from "recharts";
-import { useAuth } from "@/context/AuthContext";
 import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Input } from "../ui/input";
+import { z } from "zod";
+import UserService from "@/api/userService";
+import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, FormProvider } from "react-hook-form";
+import { Card } from "../ui/card";
+import { useState } from "react";
 
 
-const chartConfig = {
-    trust: {
-        label: "trust",
-        color: "hsl(126, 89%, 52%)",
-    },
-    remaining: {
-        label: "remaining",
-        color: "hsl(25 5.3% 44.7%)",
-    },
-}
+const formSchema = z.object({
+    name: z.string().min(4)
+})
 export default function AdminScreen() {
-    const { role } = useAuth();
-    const chartData = [{ month: "role", trust: role, remaining: 1 - role }]
+    const data = UserService.userRetrieval();
+    const [status,setStatus]=useState(<></>);
+    const token = data.token;
 
-    const totalTrust = chartData[0].trust *100
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: "",
+        },
+    })
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+
+        axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CATEGORY_ENDPOINT}`,
+            values,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
+            .then((response) => {
+                setStatus(<div className="bg-green-400">success adding {response.data.name}</div>);
+                console.log(response);
+
+            })
+            .catch((error) => {
+                setStatus(<div className="bg-red-400">success</div>);
+
+                console.error(error);
+            });
+
+
+    }
 
     return (
 
         <Drawer>
             <DrawerTrigger asChild>
-                <Button variant="outline">Check Trust Factor</Button>
+                <Button variant="outline">Add Categories</Button>
             </DrawerTrigger>
             <DrawerContent>
-                <div className="mx-auto w-full max-w-sm">
                     <DrawerHeader>
-                        <DrawerTitle>Trust factor </DrawerTitle>
+                        <DrawerTitle>Add Categories </DrawerTitle>
                     </DrawerHeader>
-                    <div className="p-4 pb-0">
-
-                        <div className="mt-3 h-[120px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <ChartContainer
-                                    config={chartConfig}
-                                    className="mx-auto aspect-square w-full max-w-[250px]"
-                                >
-                                    <RadialBarChart
-
-                                        data={chartData}
-                                        endAngle={180}
-                                        innerRadius={80}
-                                        outerRadius={130}
-                                    >
-                                        <ChartTooltip
-                                            cursor={false}
-                                            content={<ChartTooltipContent hideLabel />}
-                                        />
-                                        <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-                                            <Label className="text-foreground"
-                                                content={({ viewBox }) => {
-                                                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                                                        return (
-                                                            <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
-                                                                <tspan
-                                                                    x={viewBox.cx}
-                                                                    y={(viewBox.cy || 0) - 16}
-                                                                    className="fill-foreground text-2xl font-bold"
-                                                                >
-                                                                    {totalTrust.toLocaleString()}%
-                                                                </tspan>
-                                                                <tspan
-                                                                    x={viewBox.cx}
-                                                                    y={(viewBox.cy || 0) + 4}
-                                                                    className="text-white"
-                                                                >
-                                                                    Trust
-                                                                </tspan>
-                                                            </text>
-                                                        )
-                                                    }
-                                                }}
-                                            />
-                                        </PolarRadiusAxis>
-                                        <RadialBar
-                                            dataKey="remaining"
-                                            fill="var(--color-remaining)"
-                                            stackId="a"
-                                            cornerRadius={5}
-                                            className="stroke-transparent stroke-2"
-                                        />
-                                        <RadialBar
-                                            dataKey="trust"
-                                            stackId="a"
-                                            cornerRadius={5}
-                                            fill="var(--color-trust)"
-                                            className="stroke-transparent stroke-2"
-                                        />
-
-                                    </RadialBarChart>
-                                </ChartContainer>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-                    <DrawerFooter className="mt-20">
+                    <Card className="mx-auto px-4 mb-4 w-full max-w-sm">
+                    <div>{status}</div>
+                    <div className="bg-red-500">Make sure you are aboslutely certain you want to add a category</div>
+                    <FormProvider {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem >
+                                        <FormLabel>Page Title</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="e.g. party name" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button className="mt-8" variant="submit" type="submit">Submit</Button>
+                        </form>
+                    </FormProvider>
+                    
+                </Card>
+                <DrawerFooter className="mt-20">
                         <DrawerClose asChild>
-                            <Button variant="outline">Cancel</Button>
+                            <Button variant="outline">Close</Button>
                         </DrawerClose>
                     </DrawerFooter>
-                </div>
             </DrawerContent>
         </Drawer>
 

@@ -6,17 +6,10 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import axios from "axios"
 const x = import.meta.env.VITE_API_PAGE_TYPE_COUNT
-const page_type_count: number = (x);
-//janky thought still in rust mindset
-const page_types = new Map<number, string>();
-for (let i = 0; i < page_type_count; i++) {
-  const type = import.meta.env[`VITE_API_PAGE_TYPE_${i}`];
-  page_types.set(i, type);
-}
-const formSchema = z.object({
-  title: z.string().min(1).max(100),
-  page_type: z.number().min(0).max(page_type_count + 1),
-})
+const category_count: number = (x);
+
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -37,25 +30,57 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useEffect } from "react"
 
-
+//janky thought still in rust mindset
+const formSchema = z.object({
+  title: z.string().min(1).max(100),
+  category: z.number().min(0).max(category_count + 1),
+})
 
 
 const PageCreate = () => {
+
   // const [data, setData] = useState(null);
   // const [content, setContent] = useState(null);
   const navigate = useNavigate();
+  const data = UserService.userRetrieval();
+  const token = data?.token
+//  TODO change to unauthorized
+  if(!token){
+   navigate("/") 
+  }
 
+  const [categories, setCategories] = useState<object>();
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CATEGORY_ENDPOINT}`;
+
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setCategories(response.data)
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+    };
+    fetchCategories();
+  }, [token]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      page_type: 0,
+      category: 0,
     },
   })
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const data = UserService.userRetrieval();
     const token = data.token;
+    console.log(values);
     axios.post(
       `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}`,
       values,
@@ -74,25 +99,18 @@ const PageCreate = () => {
         console.error(error);
       });
 
-    axios.post(`${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_PAGE_ENDPOINT}`, values)
-      .then(function (response) {
-        console.log(values);
-
-        console.log(response);
-      });
+  
   }
 
-  const Dropdown = () => {
-    return (
-      <SelectContent className="bg-secondary-background">
-        {Array.from(page_types).map(([key, value]) => (
-          <SelectItem className="bg-secondary" key={key} value={String(key)}>
-            {value}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    );
-  }
+  const Dropdown = () => (
+    <SelectContent className="bg-background">
+      {categories && Object.entries(categories).map(([key, value]) => (
+        <SelectItem className="bg-foreground/10" key={key} value={String(value.id)}>
+          {value.name}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  );
 
 
   return (
@@ -101,7 +119,7 @@ const PageCreate = () => {
       {/* {diff} */}
       <div className="p-6 items-center text-foreground">
         <Card className="p-6 w-full max-w-sm ">
-        <div className="text-2xl  font-serif">Create a Page </div>
+          <div className="text-2xl  font-serif">Create a Page </div>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -117,29 +135,32 @@ const PageCreate = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
-              <FormField
+                />
+                <FormField
                 control={form.control}
-                name="page_type"
+                name="category"
                 render={({ field }) => (
                   <FormItem className="mt-8">
-                    <FormLabel>Page Type</FormLabel>
-                    <Select onValueChange={(value: string) => field.onChange(parseInt(value, 10))} defaultValue={String(field.value)}>
-                      <FormControl>
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select a party" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="">
-                        <Dropdown />
-                      </SelectContent>
-                    </Select>
+                  <FormLabel>Page Type</FormLabel>
+                  <Select  
+                    onValueChange={(value: string) => field.onChange(parseInt(value, 10))} 
+                    defaultValue={String(field.value)}
+                  >
+                    <FormControl>
+                      
+                    <SelectTrigger className=" text-foreground w-[180px]">
+                      <SelectValue placeholder="Select a page type" />
+                    </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="">
+                    <Dropdown />
+                    </SelectContent>
+                  </Select>
 
-                    <FormMessage />
+                  <FormMessage />
                   </FormItem>
                 )}
-              />
-
+                />
               <Button className="mt-8" variant="submit" type="submit">Submit</Button>
             </form>
           </Form>

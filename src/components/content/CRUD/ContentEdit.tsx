@@ -9,6 +9,7 @@ import { Label } from '@radix-ui/react-label';
 import axios from 'axios';
 import UserService from '@/api/userService';
 import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
 
 const formSchema = z.object({
   title: z.string().min(1).max(100),
@@ -63,57 +64,62 @@ export default function ContentEdit() {
   const diffValue = watch("content_body") || "";
 
   return (
-    <div className="p-4 space-y-8 ">
+    <div className="p-4  flex  ">
+      <Card className="p-6 mx-6 w-full max-w-sm  ">
 
-      <form
-        onSubmit={handleSubmit(
-          onSubmit,
-          (errors) => console.error("Form validation errors:", errors)
-        )}
-        className="space-y-6"
-      >
-                <div className="flex flex-col">
+        <form
+          onSubmit={handleSubmit(
+            onSubmit,
+            (errors) => console.error("Form validation errors:", errors)
+          )}
+          className="space-y-6"
+        >
+          <div className="flex flex-col">
 
-          <Label htmlFor="content_body" className="mb-1">
-            Title
-          </Label>
+            <Label htmlFor="content_body" className="mb-1">
+              Title
+            </Label>
             <Input
               defaultValue={""}
               id="title"
               placeholder="Enter content here..."
               {...register("title")}
               className="p-2 border rounded w-full min-h-max"
-            />                    
-</div>
+            />
+          </div>
 
-        <div className="flex flex-col">
-          <Label htmlFor="content_body" className="mb-1">
-            Content
-          </Label>
-          <Textarea rows={10}
-            defaultValue={content_to_compare}
-            id="content_body"
-            placeholder="Enter content here..."
-            {...register("content_body")}
-            className="p-2 border rounded w-full min-h-max"
-          />
-          {errors.content_body && (
-            <span className="text-red-500 text-sm">
-              {errors.content_body.message}
-            </span>
-          )}
-                <ReactDiffViewer
-        oldValue={content_to_compare}
-        newValue={diffValue}
-        splitView={true}
-        compareMethod={DiffMethod.WORDS_WITH_SPACE}
-      />
-        </div><Button
-          variant="submit"
-        >
-          Submit
-        </Button>
-      </form>
+          <div className="flex flex-col">
+            <Label htmlFor="content_body" className="mb-1">
+              Content
+            </Label>
+            <Textarea rows={10}
+              defaultValue={content_to_compare}
+              id="content_body"
+              placeholder="Enter content here..."
+              {...register("content_body")}
+              className="p-2 border rounded w-full min-h-max"
+            />
+            {errors.content_body && (
+              <span className="text-red-500 text-sm">
+                {errors.content_body.message}
+              </span>
+            )}
+
+          </div><Button
+            variant="submit"
+          >
+            Submit
+          </Button>
+        </form>
+      </Card>
+      {content_to_compare !== diffValue && (
+        <ReactDiffViewer 
+          oldValue={content_to_compare}
+          newValue={diffValue}
+          splitView={true}
+          compareMethod={DiffMethod.WORDS_WITH_SPACE}
+        />
+      )}
     </div>
   );
 }

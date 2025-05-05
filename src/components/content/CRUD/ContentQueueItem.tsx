@@ -18,16 +18,17 @@ import { useState } from "react";
 interface ContentQueueItemProps {
   item: Content;
   index: number;
-  onApprove: (index: number, queueIndex: number) => void;
-  onReject?: (index: number, queueIndex: number) => void;
+  onApprove: (index: number, queueIndex: number, id: number) => void;
+  onReject?: (index: number, queueIndex: number, id: number) => void;
 }
 
-const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemProps) => {
+const ContentQueueItem = ({ item, index, onApprove, onReject }: ContentQueueItemProps) => {
   const [open, setOpen] = useState(false);
-  
+
   let queueItems = [];
   try {
     queueItems = JSON.parse(item.queue);
+
     if (!Array.isArray(queueItems) || queueItems.length === 0) {
       return null;
     }
@@ -50,7 +51,7 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
             ) : queueItem?.is_deleted === true ? (
               <div className="text-purple-600">Delete</div>
             ) : <div className="text-green-500">Edit</div>}
-            
+
             <div className="flex justify-between">
               <div>
                 <div className="text-2xl font-serif">{queueItem?.title}</div>
@@ -61,7 +62,7 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
                 {item?.updated_at ? <div className="text-sm">updated : {formatDate(item?.updated_at)}</div> : null}
               </div>
             </div>
-            
+
             <div className="flex gap-2 mt-2">
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
@@ -82,9 +83,17 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
                     </DialogHeader>
                     <div className="text-2xl gap-4 py-4">
                       <div className="font-serif">Section Title :</div>
-                      <div className="overflow-scroll text-xs items-center">
-                        {queueItem?.title}
-                      </div>
+                      <div className="overflow-scroll items-center">
+                        {item?.status === "Pending" ? (
+                          queueItem?.content_body
+                        ) : (
+                          <ReactDiffViewer
+                            oldValue={item.title}
+                            newValue={queueItem?.title}
+                            compareMethod={DiffMethod.WORDS_WITH_SPACE}
+                          />
+                        )}
+                      </div>                      
                     </div>
                     <hr className="h-px my-4 bg-background border-0" />
                     <div className="text-lg gap-4 py-4">
@@ -93,10 +102,10 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
                         {item?.status === "Pending" ? (
                           queueItem?.content_body
                         ) : (
-                          <ReactDiffViewer 
-                            oldValue={item.content_body} 
-                            newValue={queueItem?.content_body} 
-                            compareMethod={DiffMethod.WORDS_WITH_SPACE} 
+                          <ReactDiffViewer
+                            oldValue={item.content_body}
+                            newValue={queueItem?.content_body}
+                            compareMethod={DiffMethod.WORDS_WITH_SPACE}
                           />
                         )}
                       </div>
@@ -104,7 +113,7 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
                     <DialogFooter>
                       <Button
                         variant="submit"
-                        onClick={() => { setOpen(false); onApprove(index, queueIndex); }} 
+                        onClick={() => { setOpen(false); onApprove(index, queueIndex, Number(item.id)); }}
                         type="submit"
                       >
                         {item?.status === "Pending" ? (
@@ -117,8 +126,8 @@ const ContentQueueItem = ({ item, index, onApprove, onReject}: ContentQueueItemP
                   </div>
                 </DialogContent>
               </Dialog>
-              
-              <Button variant="ghost" className="m-0 p-0" onClick={() => onReject && onReject(index, queueIndex)}>
+
+              <Button variant="ghost" className="m-0 p-0" onClick={() => onReject && onReject(index, queueIndex, Number(item.id))}>
                 <XIcon
                   className="cursor-pointer text-foreground rounded-sm bg-red-400"
                   size={20}

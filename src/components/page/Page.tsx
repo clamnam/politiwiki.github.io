@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useApi } from "../hooks/useApi";
 import { SquarePenIcon } from "../ui/square-pen";
 import ContentDelete from "../content/CRUD/ContentDelete";
@@ -19,23 +19,24 @@ import UserService from "@/api/userService";
 import { z } from "zod";
 // import ContentConfirmButton from "../content/CRUD/ContentConfirmButton";
 
-interface Page {
+interface Content {
     status: string;
     id: string;
     title: string;
     content_body: string;
     queue: string;
+    is_deleted:boolean;
+    order_id: number; // Added order_id field
 }
 
 
 const Page = () => {
-    const [data, setData] = useState<Page | null>(null);
-    const [content, setContent] = useState<Page[] | null>(null);
+    const [data, setData] = useState<Content | null>(null);
+    const [content, setContent] = useState<Content[] | null>(null);
     const [pending, setPending] = useState(0);
     const { execute } = useApi();
     const { id } = useParams();
     const { isLoggedIn } = useAuth();
-    const navigate = useNavigate();
 
 
 
@@ -64,7 +65,6 @@ const Page = () => {
 
 
             console.log("Response:", response);
-            navigate(`/page/${id}`);
         } catch (error) {
             console.error("Error submitting form:", error);
         }
@@ -77,32 +77,35 @@ const Page = () => {
         //     }
         // }
         if (content) {
+            console.log(content.filter((item: Content) => item.queue != "[]"));
             // console.log(content);
-            const pendingCount: number = content.filter((item: Page) => item.queue != "[]").length;
+            const pendingCount: number = content.filter((item: Content) => item.queue != "[]").length;
             setPending(pendingCount);
         }
     }, [content, pending]);
 
-    const rendercontent = (content: Page[]) => (
-        // console.log(content),
+    const rendercontent = (content: Content[]) => (
         <div>
-            {content.filter(item => item.status != "Pending")
+            {content
+                .filter(item => item.status != "Pending")
+                .filter(item => item.is_deleted != true)
+
+                .sort((x, y) => (x.order_id || 0) - (y.order_id || 0)) // Sort by order_id ascending
                 .map((item, index) => {
-                    // console.log(item);
                     return (
                         <div key={index} className="break-words py-2">
                             <div className="flex space-between place-content-between">
                                 <div className="text-2xl py-2 font-serif">{item.title}</div>
-
                                 <div>
+                                {isLoggedIn ?
                                     <div className="flex">
-                                        <Link state={{ content: item }} to={`/content/edit/${item.id}`} className="hover:text-green-500 p-.5">
+                                        <Link state={{ content: item }} to={`/content/edit/${item.id}`} className="hover:text-green-500 ">
                                             <SquarePenIcon size={30} />
                                         </Link>
                                         <div>
                                             <ContentDelete onDelete={handleDelete} id={Number(item.id)} content={item} />
                                         </div>
-                                    </div>
+                                    </div>:<></>}
                                 </div>
 
                             </div>
@@ -125,10 +128,8 @@ const Page = () => {
             }
             try {
                 const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/bypage/${id}`;
-                // const result = await execute("get", apiUrl);
                 axios.get(apiUrl).then((response) => {
                     setContent(response.data);
-                    // console.log(response);
                 });
 
             } catch (err) {
@@ -147,7 +148,7 @@ const Page = () => {
 
                 <div className=" flex justify-between font-medium text-4xl ">
 
-                    <div className="font-serif pb-4">{data.title}</div>
+                    <div className="font-serif pb-4">{data.title}</div> 
 
                     <div className="flex py-2">
                         {pending && isLoggedIn ?
@@ -164,13 +165,16 @@ const Page = () => {
 
                 {!content && <Alert variant="destructive" className="mt-4">
                     <AlertCircle className="h-4 w-4 " />
-                    <AlertTitle>No Content Found</AlertTitle>
+                    <AlertTitle>No Content Found{!isLoggedIn?<>, <Link className="underline"to='/login'>login to create content</Link></>:<></>}</AlertTitle>
 
                 </Alert>}
 
                 {isLoggedIn ? (<Link to="/content/create" state={{ page: id }}><div className="flex my-8 hover:bg-stone-300 hover:dark:bg-stone-800 rounded-md hover:cursor-cell justify-center">
                     <Plus size={80} />
-                </div></Link>) : null
+                </div></Link>) : 
+                <><div className="text-lg">
+                <Link className=" flex my-8 hover:bg-stone-300 hover:dark:bg-stone-800 rounded-md hover:cursor-cell justify-center  sm:no-underline underline" to='/login'> Want to Contribute? Login</Link>
+            </div></>
                 }
 
 

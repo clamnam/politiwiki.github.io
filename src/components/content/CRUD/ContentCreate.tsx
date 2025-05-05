@@ -29,25 +29,39 @@ import {
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import UserService from "@/api/userService"
+import { useEffect, useState } from "react";
 
 
 
 const ContentCreate = () => {
   const navigate = useNavigate(); // Initialize the navigate function
-
+  const [orderNum, setOrderNum] = useState(0);
   const location = useLocation();
-  const data = location.state;
-  if (data?.page === undefined || isNaN(Number(data.page))) {
+  const pageData = location.state;
+  if (pageData?.page === undefined || isNaN(Number(pageData.page))) {
     navigate('/pages');
   }
 
+  const pageIdNumber = parseInt(pageData.page, 10);
+
   // Add debugging
-  console.log("data.page type:", typeof data.page);
-  console.log("data.page value:", data.page);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/bypage/${pageIdNumber}`;
+        axios.get(apiUrl).then((response) => {
+          setOrderNum((response.data).length);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+
+    };
+    if (pageIdNumber) fetchData();
+
+  }, [pageIdNumber]);
 
   // More explicit conversion
-  const pageIdNumber = parseInt(data.page, 10);
-  console.log("Converted page ID:", pageIdNumber, "type:", typeof pageIdNumber);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,16 +69,16 @@ const ContentCreate = () => {
       title: "",
       content_type: 1,
       content_body: "",
-      order_id: 2,
+      order_id: orderNum,
       page_id: pageIdNumber, // Use the explicitly converted number
     },
   })
-  async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {    
+  async function onSubmit(values: z.infer<typeof formSchema>): Promise<void> {
     const data = UserService.userRetrieval();
     const token = data.token;
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}`, 
+        `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}`,
         values,
         {
           headers: {
@@ -73,11 +87,11 @@ const ContentCreate = () => {
         }
       );
       console.log("Response:", response);
+      console.log(pageData.page);
       // Show success message or redirect user
-      navigate(`/page/${data.page}`); // Redirect to the page view after successful creation
+      navigate(`/page/${Number(pageData.page)}`); // Redirect to the page view after successful creation
     } catch (error) {
       console.error("Error submitting form:", error);
-      console.log(values);
       // Handle error - show error message to user
     }
   }
@@ -87,13 +101,13 @@ const ContentCreate = () => {
     <>
       <div className=" p-6 md:p-10">
         <Card className="p-6 w-full max-w-sm  ">
-        <div className="text-2xl font-serif">Create Content </div>
+          <div className="text-2xl font-serif">Create Content </div>
           <Form {...form}>
-            <form 
+            <form
               onSubmit={form.handleSubmit(
-                onSubmit, 
+                onSubmit,
                 (errors) => console.error("Form validation errors:", errors)
-              )} 
+              )}
               className="space-y-4"
             >
               <FormField
@@ -109,9 +123,9 @@ const ContentCreate = () => {
                   </FormItem>
                 )}
               />
-              <FormField 
-                control={form.control} 
-                name="content_body" 
+              <FormField
+                control={form.control}
+                name="content_body"
                 render={({ field }) => (
                   <FormItem className="my-2">
                     <FormLabel>Content Body</FormLabel>
@@ -122,9 +136,9 @@ const ContentCreate = () => {
                   </FormItem>
                 )}
               />
-              <Button 
-                className="my-2" 
-                variant="submit" 
+              <Button
+                className="my-2"
+                variant="submit"
                 type="submit"
                 onClick={() => console.log("Button clicked")}
               >
@@ -139,6 +153,8 @@ const ContentCreate = () => {
 };
 
 export default ContentCreate;
+
+
 
 
 
