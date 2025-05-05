@@ -44,26 +44,28 @@ const ContentQueueItem = ({ item, index, onApprove, onReject }: ContentQueueItem
     <div>
       <hr className="h-px my-4 border-0 bg-background" />
       <div className="m-4">
+        
         {currentItems.map((queueItem, queueIndex) => (
           <div key={queueIndex} className="mb-8 pb-4 border-b border-gray-200">
+           <div className="flex justify-between">
             {queueItem?.status === "Pending" && queueItem?.is_deleted === false && !item.updated_at ? (
               <div className="text-red-500">New Content</div>
             ) : queueItem?.is_deleted === true ? (
               <div className="text-purple-600">Delete</div>
-            ) : <div className="text-green-500">Edit</div>}
+            ) : <div className="text-green-500">Edit</div>}              <div className="">
+            <div className="text-sm ">created : {formatDate(item?.created_at)}</div>
+            {item?.updated_at ? <div className="text-sm">updated : {formatDate(item?.updated_at)}</div> : null}
+          </div></div>
 
-            <div className="flex justify-between">
-              <div>
-                <div className="text-2xl font-serif">{queueItem?.title}</div>
+            <div className=" grid justify-between">
+              <div className="">
+                <div className="text-2xl ">{queueItem?.title}</div>
                 <div className="text-lg">{queueItem?.content_body}</div>
               </div>
-              <div>
-                <div className="text-sm">created : {formatDate(item?.created_at)}</div>
-                {item?.updated_at ? <div className="text-sm">updated : {formatDate(item?.updated_at)}</div> : null}
-              </div>
+
             </div>
 
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-2 mt-2 ">
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button variant="ghost">

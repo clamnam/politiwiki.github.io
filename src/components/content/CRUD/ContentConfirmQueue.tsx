@@ -37,7 +37,7 @@ const ContentConfirmQueue = () => {
   async function onSubmitApproval(values: QueueFormData & { content_id?: number }): Promise<void> {
     const data = UserService.userRetrieval();
     const token = data.token;
-    const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}/approve/${id}`;
+    const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_CONTENT_ENDPOINT}approve/${id}`;
 
     try {
       const response = await axios.patch(

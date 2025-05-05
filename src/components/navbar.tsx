@@ -88,8 +88,7 @@ const Navbar = () => {
                         <DropdownMenu open={open} onOpenChange={setOpen}>
                             <DropdownMenuTrigger  className=" p-3 flex hover:cursor-pointer bg-foreground text-background hover:bg-background/10 "> {username ? <>{username}</>: <>Account</>}<ChevronDownIcon className='p-0 pr-2' /></DropdownMenuTrigger>
                             <DropdownMenuContent className='bg-background'>
-                                <DropdownMenuLabel className='hover:bg-foreground/10 hover:underline underline-offset-8'><Link to='/profile'>My Account</Link></DropdownMenuLabel>
-                                <DropdownMenuSeparator />
+                            {isLoggedIn?<><DropdownMenuLabel className='hover:bg-foreground/10 hover:underline underline-offset-8'><Link to='/profile'>My Account</Link></DropdownMenuLabel><DropdownMenuSeparator /></>:null}
                                 {isLoggedIn ? <LogOut /> : <Login />}
                             </DropdownMenuContent>
                         </DropdownMenu>
